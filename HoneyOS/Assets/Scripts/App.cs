@@ -17,7 +17,7 @@ public class App : MonoBehaviour
     public virtual void Open()
     {   
         gameObject.SetActive(true);
-        animator.Play("SampleOpenApp");
+        animator.Play("Open");
         UpdateIcon(AppState.Opened);
     }
 
@@ -31,7 +31,11 @@ public class App : MonoBehaviour
 
     public virtual void Minimize()
     {   
-        animator.Play("SampleClose");
+        animator.Play("Close");
+
+        // Update the app icon state
+        UpdateIcon(AppState.Minimized);
+
         // Start a coroutine to delay deactivation
         StartCoroutine(DeactivateAfterAnimation());
     }
@@ -43,8 +47,7 @@ public class App : MonoBehaviour
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
         // Deactivate the GameObject
         gameObject.SetActive(false);
-        // Update the app icon state
-        UpdateIcon(AppState.Minimized);
+       
     }
     
     // Method to reset the app to its default state

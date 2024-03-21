@@ -21,7 +21,7 @@ public class AppIcon : MonoBehaviour
                 // Set the indicator visible and color to yellow
                 indicator.gameObject.SetActive(true);
                 SetIndicatorColorFromHex("#F7BD48");
-                ChangeIndicatorWidth(30);
+                ChangeIndicatorWidth(18);
                 break;
             case AppState.Minimized:
                 // Set the indicator smaller width and color to black

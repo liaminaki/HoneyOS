@@ -2,23 +2,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-// Define the TextEditor class that extends the App class
-public class TextEditor : App
-{
+
+// Define the FileManager class that extends the App class
+public class Help : App
+{   
     public TextMeshProUGUI textMeshPro;
 
     // Override the ResetApp method to reset FileManager to default state
     protected override void Reset()
     {   
-        textMeshPro.text = "I AM IN TEXT EDITOR.";
+        textMeshPro.text = "I AM IN HELPPPP.";
         // Implement FileManager-specific reset behavior here
     }
    
     public void ChangeText()
     {
         // Assign the new text to the TextMeshPro component
-        textMeshPro.text = "I AM IN TEXT EDITOR. I MODIFIED SHITZ.";
+        textMeshPro.text = "I AM IN HELPPPP. I MODIFIED SHITZ.";
     }
+
+    // Add FileManager-specific functionality here if needed
+
     
-    // Add TextEditor-specific functionality here if needed
 }
