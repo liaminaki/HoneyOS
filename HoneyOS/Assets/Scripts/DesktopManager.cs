@@ -11,8 +11,9 @@ public class DesktopManager : MonoBehaviour
 
     private void Start()
     {
-        // Close all apps when DesktopManager starts
-        CloseAllApps();
+        
+        // // Close all apps when DesktopManager starts
+        // CloseAllApps();
     }
 
     public void CloseAllApps()
