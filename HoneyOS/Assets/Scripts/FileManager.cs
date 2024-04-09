@@ -1,90 +1,75 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 
 // Define the FileManager class that extends the App class
 public class FileManager : App
 {   
-    // private Node home;
-    // private Node currentDirectory;
 
-    // [SerializeField] private TMP_Text _currentDirectoryAddress;
+    [SerializeField] private TMP_Text _currentAddress;
+    private Node root;
+    private Node currentDirectory;
 
+    public FileManager (){
+        this.root = new Node (new FileDescriptor (">Home", "Home"));
+        currentDirectory = root;
+    }
 
-    // public void Start(){
-    //     home = new Node (new FileDescriptor("Home", "home"));
-    //     currentDirectory = home;
+    public void Start (){
+        UpdateAddress();
+    }
 
-    //     UpdateCurrentDirectoryText();
-    // }
-
-    // public void UpdateCurrentDirectoryText(){
-    //     _currentDirectoryAddress.text = currentDirectory.FileDescriptor.Path;
-    // }
-
-
+    public void UpdateAddress(){
+        if (currentDirectory != null && currentDirectory.FileDescriptor != null){
+            string path = currentDirectory.FileDescriptor.Path;
+            _currentAddress.text = path;
+        }
+        else{
+            Debug.Log ("Current directory of its file descriptor is null.");
+        }
+    }
 }
 
-// public class FileDescriptor {
-//     public string Path { get; private set; }
-//     public string Contents { get; set; }
-//     public string Name { get; private set; }
+public class FileDescriptor
+{
+    public string Path { get; set; }
+    public string Contents { get; set; }
+    public string Name { get; set; }
 
-//     public FileDescriptor(string path, string name)
-//     {
-//         Path = path;
-//         Contents = "";
-//         Name = name;
-//     }
+    public FileDescriptor(string path, string name)
+    {
+        Path = path;
+        Contents = "";
+        Name = name;
+    }
+}
 
-//     public void SetName(string name)
-//     {
-//         Name = name;
-//     }
+public class Node
+{
+    public FileDescriptor FileDescriptor { get; }
+    public List<Node> Children { get; }
+    public Node Parent { get; private set; }
 
-//     public void SetPath(string path)
-//     {
-//         Path = path;
-//     }
+    public Node(FileDescriptor fileDescriptor)
+    {
+        FileDescriptor = fileDescriptor;
+        Children = new List<Node>();
+    }
 
-//     public string GetContent()
-//     {
-//         return Contents;
-//     }
+    public void SetParent(Node parent)
+    {
+        Parent = parent;
+    }
 
-//     public void SetContents(string contents)
-//     {
-//         Contents = contents;
-//     }
-// }
+    public void AddChild(Node child)
+    {
+        child.SetParent(this);
+        Children.Add(child);
+    }
 
-// public class Node {
-//     public FileDescriptor FileDescriptor { get; private set; }
-//     public List<Node> Children { get; private set; }
-//     public Node Parent { get; private set; }
-
-//     public Node(FileDescriptor fileDescriptor)
-//     {
-//         FileDescriptor = fileDescriptor;
-//         Children = new List<Node>();
-//     }
-
-//     public void SetParent(Node parent)
-//     {
-//         Parent = parent;
-//     }
-
-//     public void AddChild(Node child)
-//     {
-//         child.SetParent(this);
-//         Children.Add(child);
-//     }
-
-//     public void RemoveChild(Node child)
-//     {
-//         Children.Remove(child);
-//     }
-
-    
-// }
+    public void RemoveChild(Node child){
+        Children.Remove(child);
+    }
+}
