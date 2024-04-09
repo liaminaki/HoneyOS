@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.IO;
+using System;
+using UnityEngine.UI;
 
 
 // Define the FileManager class that extends the App class
@@ -8,16 +11,53 @@ public class FileSystem : MonoBehaviour
 {   
 
     [SerializeField] private TMP_Text _currentAddress;
-    private Node root;
-    private Node currentDirectory;
+    [SerializeField] private TMP_Text _directoryName;
+    public Node root;
+    public Node currentDirectory;
 
-    public FileSystem (){
-        this.root = new Node (new FileDescriptor (">Home", "Home"));
+    private const string saveFilePath = "filesystem.json";
+
+    private void Awake(){
+        LoadFileSystem();
+        UpdateAddress();
+    }
+
+    private void OnDestroy(){
+        SaveFileSystem();
+    }
+
+    private void LoadFileSystem(){
+        if (File.Exists(saveFilePath)){
+            string json = File.ReadAllText(saveFilePath);
+            root = JsonUtility.FromJson<Node>(json);
+        }
+        else{
+            root = new Node (new FileDescriptor ("File Location", "Root"));
+            AddDefaultChildrenToRoot();
+        }
         currentDirectory = root;
     }
 
-    public void Start (){
-        UpdateAddress();
+    private void AddDefaultChildrenToRoot(){
+        root.AddChild(new Node(new FileDescriptor(currentDirectory.FileDescriptor.Path + "/Home", "Home")));
+        root.AddChild(new Node(new FileDescriptor(currentDirectory.FileDescriptor.Path + "/Gallery", "Gallery")));
+        root.AddChild(new Node(new FileDescriptor(currentDirectory.FileDescriptor.Path + "/Desktop", "Desktop")));
+        root.AddChild(new Node(new FileDescriptor(currentDirectory.FileDescriptor.Path + "/Downloads", "Downloads")));
+        root.AddChild(new Node(new FileDescriptor(currentDirectory.FileDescriptor.Path + "/Documents", "Documents")));
+        root.AddChild(new Node(new FileDescriptor(currentDirectory.FileDescriptor.Path + "/Pictures", "Pictures")));
+        root.AddChild(new Node(new FileDescriptor(currentDirectory.FileDescriptor.Path + "/Hard Drive", "Hard Drive")));
+        root.AddChild(new Node(new FileDescriptor(currentDirectory.FileDescriptor.Path + "/Network", "Network")));
+    }
+
+    private void SaveFileSystem(){
+        string json = JsonUtility.ToJson(root);
+        File.WriteAllText(saveFilePath, json);
+        Debug.Log("File system saved to: " + saveFilePath);
+    }
+
+    public FileSystem (){
+        this.root = new Node (new FileDescriptor ("File Location", "Root"));
+        currentDirectory = root;
     }
 
     public void UpdateAddress(){
@@ -28,6 +68,33 @@ public class FileSystem : MonoBehaviour
         else{
             Debug.Log ("Current directory of its file descriptor is null.");
         }
+    }
+
+    public void ChangeDirectory (){
+        string directoryName = _directoryName.text;
+        Node targetDirectory = FindDirectory (root,directoryName);
+
+        if (targetDirectory != null){
+            currentDirectory = targetDirectory;
+            UpdateAddress();
+        }
+        else{
+            Debug.Log("Directory " + directoryName + " not found");
+        }
+    }
+
+    public Node FindDirectory(Node currentNode, string directoryName){
+        if (currentNode.FileDescriptor.Name == directoryName){
+            return currentNode;
+        }
+
+        foreach (Node child in currentNode.Children){
+            Node foundNode = FindDirectory(child, directoryName);
+            if(foundNode != null){
+                return foundNode;
+            }
+        }
+        return null;
     }
 }
 
