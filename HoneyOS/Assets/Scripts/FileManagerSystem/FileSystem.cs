@@ -17,7 +17,10 @@ public class FileSystem : MonoBehaviour
 
     private const string saveFilePath = "filesystem.json";
 
-    private void Awake(){
+    private void Start(){
+        if (File.Exists(saveFilePath)){
+            File.Delete(saveFilePath);
+        }
         LoadFileSystem();
         UpdateAddress();
     }
@@ -36,6 +39,12 @@ public class FileSystem : MonoBehaviour
             AddDefaultChildrenToRoot();
         }
         currentDirectory = root;
+        if(currentDirectory == null) {
+            Debug.LogError("currentDirectory is null after initialization.");
+        }
+        else {
+            Debug.Log("currentDirectory: " + currentDirectory.FileDescriptor.Name);
+        }
     }
 
     private void AddDefaultChildrenToRoot(){
@@ -52,7 +61,6 @@ public class FileSystem : MonoBehaviour
     private void SaveFileSystem(){
         string json = JsonUtility.ToJson(root);
         File.WriteAllText(saveFilePath, json);
-        Debug.Log("File system saved to: " + saveFilePath);
     }
 
     public FileSystem (){
@@ -120,7 +128,7 @@ public class Node
 
     public Node(FileDescriptor fileDescriptor)
     {
-        FileDescriptor = fileDescriptor;
+        FileDescriptor = fileDescriptor ?? throw new ArgumentNullException(nameof(fileDescriptor));
         Children = new List<Node>();
     }
 
