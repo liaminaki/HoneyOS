@@ -52,7 +52,7 @@ public class FileSystem : MonoBehaviour
     private void SaveFileSystem(){
         string json = JsonUtility.ToJson(root);
         File.WriteAllText(saveFilePath, json);
-        Debug.Log("File system saved to: " + saveFilePath);
+        // Debug.Log("File system saved to: " + saveFilePath);
     }
 
     public FileSystem (){
@@ -66,7 +66,7 @@ public class FileSystem : MonoBehaviour
             _currentAddress.text = path;
         }
         else{
-            Debug.Log ("Current directory of its file descriptor is null.");
+            // Debug.Log ("Current directory of its file descriptor is null.");
         }
     }
 
@@ -79,7 +79,7 @@ public class FileSystem : MonoBehaviour
             UpdateAddress();
         }
         else{
-            Debug.Log("Directory " + directoryName + " not found");
+            // Debug.Log("Directory " + directoryName + " not found");
         }
     }
 
