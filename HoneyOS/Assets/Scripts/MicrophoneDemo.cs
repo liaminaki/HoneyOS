@@ -54,6 +54,11 @@ namespace Whisper.Samples
         public AudioClip stopRecordingSound; // Assign this in the Unity editor
         public AudioClip whatCanIDoSound;
 
+        [Header("SpaceBarHandler")]
+        public float longLongPressDuration = 1.0f; // Adjust this duration in seconds as needed
+        private float pressStartTime;
+        private bool isLongLongPressTriggered = false;
+
         private void Awake()
         {
             whisper.OnNewSegment += OnNewSegment;
@@ -95,6 +100,9 @@ namespace Whisper.Samples
         }
 
         private void Update() {
+
+            // Call the separate function to handle space bar input events
+            HandleSpaceBarInput();
             
             Color color; 
             
@@ -241,5 +249,35 @@ namespace Whisper.Samples
             DisplayOutputText("Sorry, Sweetie. Command not found.");
             UnityEngine.Debug.Log($"Unknown command: {command}");
         }
+
+    // Handle space bar input events
+    void HandleSpaceBarInput()
+    {
+        // Check if the space bar is pressed down
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            pressStartTime = Time.time; // Record the press start time
+            isLongLongPressTriggered = false;
+        }
+
+        // Check if the space bar is being held down
+        if (Input.GetKey(KeyCode.Space))
+        {
+            // Check if the press duration has exceeded the long long press duration
+            if (!isLongLongPressTriggered && Time.time - pressStartTime >= longLongPressDuration)
+            {
+                // Execute the function during long long press
+                OnButtonPressed();
+                isLongLongPressTriggered = true; // Set the flag to true so the function isn't called repeatedly
+            }
+        }
+
+        // Check if the space bar is released
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            // Execute the function when the space bar is released
+            OnButtonPressed();
+        }
+    }
     }
 }
