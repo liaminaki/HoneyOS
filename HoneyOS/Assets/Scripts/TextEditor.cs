@@ -24,11 +24,11 @@ public class TextEditor : App
     // Add TextEditor-specific functionality here if needed
     
     // Called when the script instance is being loaded
-    private void Start()
-    {
-        // Add a listener to the OnValueChanged event of the Input Field
-        inputField.onValueChanged.AddListener(OnTextInput);
-    }
+    // private void Start()
+    // {
+    //     // Add a listener to the OnValueChanged event of the Input Field
+    //     inputField.onValueChanged.AddListener(OnTextInput);
+    // }
 
     // Function to handle text input
     public void OnTextInput(string text)
