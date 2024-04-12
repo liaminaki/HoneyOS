@@ -5,20 +5,21 @@ using TMPro;
 // Define the TextEditor class that extends the App class
 public class TextEditor : App
 {
+    [SerializeField] TextEditorController textEditorController;
     public TextMeshProUGUI textMeshPro;
-    public TMP_InputField inputField;
 
     // Override the ResetApp method to reset FileManager to default state
     protected override void Reset()
     {   
-        textMeshPro.text = "I AM IN TEXT EDITOR.";
+        //textMeshPro.text = "I AM IN TEXT EDITOR.";
         // Implement FileManager-specific reset behavior here
+        textEditorController.NewFile();
     }
    
     public void ChangeText()
     {
         // Assign the new text to the TextMeshPro component
-        textMeshPro.text = "I AM IN TEXT EDITOR. I MODIFIED SHITZ.";
+        //textMeshPro.text = "I AM IN TEXT EDITOR. I MODIFIED SHITZ.";
     }
     
     // Add TextEditor-specific functionality here if needed
@@ -27,7 +28,7 @@ public class TextEditor : App
     // private void Start()
     // {
     //     // Add a listener to the OnValueChanged event of the Input Field
-    //     inputField.onValueChanged.AddListener(OnTextInput);
+    //     // inputField.onValueChanged.AddListener(OnTextInput);
     // }
 
     // Function to handle text input
