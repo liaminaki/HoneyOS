@@ -11,7 +11,7 @@ public class TextEditor : App
     // Override the ResetApp method to reset FileManager to default state
     protected override void Reset()
     {   
-        textMeshPro.text = "I AM IN TEXT EDITOR.";
+        //textMeshPro.text = "I AM IN TEXT EDITOR.";
         // Implement FileManager-specific reset behavior here
         textEditorController.NewFile();
     }
@@ -19,7 +19,7 @@ public class TextEditor : App
     public void ChangeText()
     {
         // Assign the new text to the TextMeshPro component
-        textMeshPro.text = "I AM IN TEXT EDITOR. I MODIFIED SHITZ.";
+        //textMeshPro.text = "I AM IN TEXT EDITOR. I MODIFIED SHITZ.";
     }
     
     // Add TextEditor-specific functionality here if needed

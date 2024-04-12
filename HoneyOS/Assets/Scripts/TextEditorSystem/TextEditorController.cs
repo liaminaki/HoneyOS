@@ -5,7 +5,6 @@ using UnityEngine;
 using System.IO;
 using SFB;
 using UnityEngine.Networking;
-using UnityEditor.Callbacks;
 
 // BUG ALERT!
 // 1. On start of text editor, when clicking filename, text are not highlighted. This is because of placeholder in inputfield.
