@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 
 // BUG ALERT!
 // 1. On start of text editor, when clicking filename, text are not highlighted. This is because of placeholder in inputfield.
-// 2. When opening file, since value (textfield and/or filename) has changed, SaveButton.interactable is set to true. Should be false.
+// 2. When opening file, since value (textfield and/or filename) has changed, SaveButton.interactable is set to true. Should be false. [SOLVED]
 // 3. On popup: When user clicks save (specific to SaveAs()) which opens Save Panel and exits panel w/o saving, Open File Panel opens. 
 //    Open File Panel should not open when saving is cancelled. [SOLVED]
 // 4. Continuation of #3. When cancelling Open File Panel and cancelling Unsaved Changes Pop Up, the next time user clicks Open File
@@ -130,7 +130,10 @@ public class TextEditorController : MonoBehaviour
         if (www.result != UnityWebRequest.Result.Success)
             Debug.Log("WWW ERROR: " + www.error);
         else
+        {
             TextField.text = www.downloadHandler.text;
+            ButtonManager.Instance.SaveButton.GetComponent<ButtonController>().SetInteractable(false);
+        }
     }
 
     void OnEndEditFileName(string newFileName)
@@ -143,7 +146,6 @@ public class TextEditorController : MonoBehaviour
     void OnValueChangedTextField(string newContent)
     {
         ButtonManager.Instance.SaveButton.GetComponent<ButtonController>().SetInteractable(true);
-        ButtonManager.Instance.SaveAsButton.GetComponent<ButtonController>().SetInteractable(true);
     }
 
     void ClosePopUp()
