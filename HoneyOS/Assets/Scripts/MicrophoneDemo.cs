@@ -47,6 +47,12 @@ namespace Whisper.Samples
         public Color voiceDetectedColor;
         public Color voiceUndetectedColor;
 
+        [Header("SFX")]
+        public AudioSource audioSource; // Reference to the AudioSource component 
+        public AudioClip startRecordingSound; // Assign this in the Unity editor
+        public AudioClip stopRecordingSound; // Assign this in the Unity editor
+        public AudioClip whatCanIDoSound;
+
         private void Awake()
         {
             whisper.OnNewSegment += OnNewSegment;
@@ -76,7 +82,7 @@ namespace Whisper.Samples
                 { "open text editor", ( () => desktopManager.OpenApp(0), "Opening Text Editor" ) },
                 { "open file manager", ( () => desktopManager.OpenApp(1), "Opening File Manager" ) },
                 { "open help", ( () => desktopManager.OpenApp(2), "Opening Help App" ) },
-                { "close app", ( () => desktopManager.CloseCurrentApp(), "Closing app" ) },
+                { "close application", ( () => desktopManager.CloseCurrentApp(), "Closing app" ) },
                 // Add more commands and their corresponding functions and messages as needed
             };
         }
@@ -104,19 +110,33 @@ namespace Whisper.Samples
         {
             if (!microphoneRecord.IsRecording)
             {
+                // Play the start recording sound effect
+                audioSource.clip = startRecordingSound;
+                audioSource.Play();
+
+                audioSource.clip = whatCanIDoSound;
+                audioSource.Play();
+
                 microphoneRecord.StartRecord();
                 // buttonText.text = "Stop";
                 UnityEngine.Debug.Log("Recording...");
+
+                string message = "Honey, what can I do for you?";
+                DisplayOutputText(message);
             }
+           
             else
             {
+                // Play the start recording sound effect
+                audioSource.clip = stopRecordingSound;
+                audioSource.Play();
+
                 microphoneRecord.StopRecord();
                 // buttonText.text = "Record";
                 UnityEngine.Debug.Log("Stop recording.");
+
+
             }
-            
-            string message = "Honey, what can I do for you?";
-            DisplayOutputText(message);
             
         }
         
