@@ -48,7 +48,6 @@ public class TextEditorController : MonoBehaviour
         // Check for keyboard shortcuts
         if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
         {
-            // Check for Undo (Ctrl + Z)
             if (Input.GetKeyDown(KeyCode.LeftShift)){
                 if (Input.GetKeyDown(KeyCode.S))
                 {
@@ -71,7 +70,6 @@ public class TextEditorController : MonoBehaviour
             {
                 Undo();
             }
-            // Check for Redo (Ctrl + Y)
             else if (Input.GetKeyDown(KeyCode.Y))
             {
                 Redo();
@@ -142,6 +140,7 @@ public class TextEditorController : MonoBehaviour
             ButtonManager.Instance.SaveButton.GetComponent<ButtonController>().SetInteractable(false);
             ButtonManager.Instance.UndoButton.GetComponent<ButtonController>().SetInteractable(false);
             ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(false);
+            ButtonManager.Instance.PasteButton.GetComponent<ButtonController>().SetInteractable(false);
             SaveCancelled = false;
         }
     }
@@ -170,6 +169,7 @@ public class TextEditorController : MonoBehaviour
         ButtonManager.Instance.SaveButton.GetComponent<ButtonController>().SetInteractable(false);
         ButtonManager.Instance.UndoButton.GetComponent<ButtonController>().SetInteractable(false);
         ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(false);
+        ButtonManager.Instance.PasteButton.GetComponent<ButtonController>().SetInteractable(false);
         SaveCancelled = false;
     }
     public void CheckNewFile()
@@ -284,6 +284,7 @@ public class TextEditorController : MonoBehaviour
             if(selectedText != ""){
                 // Copy the selected text to the system clipboard
                 GUIUtility.systemCopyBuffer = selectedText;
+                ButtonManager.Instance.PasteButton.GetComponent<ButtonController>().SetInteractable(true);
             }
             else{
                 Debug.Log("No text is selected.");
@@ -318,6 +319,7 @@ public class TextEditorController : MonoBehaviour
                     TextField.selectionAnchorPosition = startIndex;
                     TextField.selectionFocusPosition = startIndex;
                     isCut = true;
+                    ButtonManager.Instance.PasteButton.GetComponent<ButtonController>().SetInteractable(true);
                 }
                 else{
                     Debug.Log("No text is selected.");
