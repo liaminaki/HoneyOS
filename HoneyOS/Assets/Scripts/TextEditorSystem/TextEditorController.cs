@@ -24,6 +24,7 @@ public class TextEditorController : MonoBehaviour
     [SerializeField] TMP_InputField TextField;
     private string currentFilePath;
     private bool SaveCancelled = false;
+    private bool isCut = false;
 
     public FiniteStack<string> undoStack;
     public FiniteStack<string> redoStack;
@@ -194,11 +195,16 @@ public class TextEditorController : MonoBehaviour
             PopUpManager.Instance.UnsavedChangesNewFile.GetComponent<PopupController>().Hide();
     }
 
-    void Undo()
+    public void Undo()
     {
         if (undoStack.Count > 0)
         {
-            undoStack.Pop();
+            if(!isCut) {
+                undoStack.Pop();
+            }
+            else{
+                isCut = false;
+            }
             redoStack.Push(TextField.text);
             if (undoStack.Peek() != null){
                 TextField.text = undoStack.Peek();
@@ -206,14 +212,14 @@ public class TextEditorController : MonoBehaviour
             else{
                 TextField.text = "";
             }
-            ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(true);
             if(undoStack.Count == 0){
                 ButtonManager.Instance.UndoButton.GetComponent<ButtonController>().SetInteractable(false);
             }
+            ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(true);
         }
     }
 
-    void Redo()
+    public void Redo()
     {
         if (redoStack.Count > 0)
         {
@@ -230,5 +236,65 @@ public class TextEditorController : MonoBehaviour
     {
         undoStack.Clear();
         redoStack.Clear();
-    }    
+    }
+
+    public void Copy(){
+        int startIndex = Mathf.Min(TextField.selectionAnchorPosition, TextField.selectionFocusPosition);
+        int endIndex = Mathf.Max(TextField.selectionAnchorPosition, TextField.selectionFocusPosition);
+
+        // Check if there is any text selected
+        if (startIndex >= 0 && endIndex <= TextField.text.Length)
+        {
+            // Get the selected text
+            string selectedText = TextField.text.Substring(startIndex, endIndex - startIndex);
+            
+            if(selectedText != ""){
+                // Copy the selected text to the system clipboard
+                GUIUtility.systemCopyBuffer = selectedText;
+            }
+            else{
+                Debug.Log("No text is selected.");
+            }
+        }
+        else
+        {
+            // If no text is selected or indices are invalid, you can optionally handle this case (e.g., display a message)
+            Debug.Log("No text is selected or indices are invalid.");
+        }
+    }
+
+    public void Cut(){
+        if (TextField.selectionAnchorPosition != TextField.selectionFocusPosition)
+        {
+            int startIndex = Mathf.Min(TextField.selectionAnchorPosition, TextField.selectionFocusPosition);
+            int endIndex = Mathf.Max(TextField.selectionAnchorPosition, TextField.selectionFocusPosition);
+
+            // Ensure that both indices are within the valid range of the text length
+            if (startIndex >= 0 && endIndex <= TextField.text.Length)
+            {
+                // Get the selected text
+                string selectedText = TextField.text.Substring(startIndex, endIndex - startIndex);
+
+                if(selectedText != ""){
+                    // Copy the selected text to the system clipboard
+                    GUIUtility.systemCopyBuffer = selectedText;
+                    // Remove the selected text from the input field
+                    TextField.text = TextField.text.Remove(startIndex, endIndex - startIndex);
+
+                    // Update the selection to indicate no text is selected
+                    TextField.selectionAnchorPosition = startIndex;
+                    TextField.selectionFocusPosition = startIndex;
+                    isCut = true;
+                }
+                else{
+                    Debug.Log("No text is selected.");
+                }
+            }
+        }
+        else
+        {
+            // If no text is selected, you can optionally handle this case (e.g., display a message)
+            Debug.Log("No text is selected.");
+        }
+    } 
 }
