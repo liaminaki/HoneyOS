@@ -43,6 +43,23 @@ public class TextEditorController : MonoBehaviour
         NewFile();
     }
 
+    void Update(){
+        // Check for keyboard shortcuts
+        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        {
+            // Check for Undo (Ctrl + Z)
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                Undo();
+            }
+            // Check for Redo (Ctrl + Y)
+            else if (Input.GetKeyDown(KeyCode.Y))
+            {
+                Redo();
+            }
+        }
+    }
+
     public void Save()
     {
         if (!string.IsNullOrEmpty(currentFilePath))
