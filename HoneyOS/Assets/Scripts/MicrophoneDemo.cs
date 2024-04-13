@@ -55,7 +55,7 @@ namespace Whisper.Samples
         public AudioClip whatCanIDoSound;
 
         [Header("SpaceBarHandler")]
-        public float longLongPressDuration = 1.0f; // Adjust this duration in seconds as needed
+        public float longLongPressDuration = 0.2f; // Adjust this duration in seconds as needed
         private float pressStartTime;
         private bool isLongLongPressTriggered = false;
 
@@ -251,33 +251,38 @@ namespace Whisper.Samples
         }
 
     // Handle space bar input events
-    void HandleSpaceBarInput()
-    {
-        // Check if the space bar is pressed down
-        if (Input.GetKeyDown(KeyCode.Space))
+        void HandleSpaceBarInput()
         {
-            pressStartTime = Time.time; // Record the press start time
-            isLongLongPressTriggered = false;
-        }
-
-        // Check if the space bar is being held down
-        if (Input.GetKey(KeyCode.Space))
-        {
-            // Check if the press duration has exceeded the long long press duration
-            if (!isLongLongPressTriggered && Time.time - pressStartTime >= longLongPressDuration)
+            // Check if the space bar is pressed down
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                // Execute the function during long long press
-                OnButtonPressed();
-                isLongLongPressTriggered = true; // Set the flag to true so the function isn't called repeatedly
+                pressStartTime = Time.time; // Record the start time of the press
+                isLongLongPressTriggered = false; // Reset the long long press trigger flag
+            }
+
+            // Check if the space bar is being held down
+            if (Input.GetKey(KeyCode.Space))
+            {
+                // Calculate the duration the space bar has been held down
+                float holdDuration = Time.time - pressStartTime;
+
+                // If the hold duration exceeds longLongPressDuration and the function has not been triggered yet
+                if (!isLongLongPressTriggered && holdDuration >= longLongPressDuration)
+                {
+                    // Execute the function during long long press
+                    OnButtonPressed();
+                    // Set the flag to true to prevent repeated execution while the key is still held down
+                    isLongLongPressTriggered = true;
+                }
+            }
+
+            // Check if the space bar is released
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                if (isLongLongPressTriggered)
+                    // Execute the function when the space bar is released
+                    OnButtonPressed();
             }
         }
-
-        // Check if the space bar is released
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            // Execute the function when the space bar is released
-            OnButtonPressed();
-        }
-    }
     }
 }
