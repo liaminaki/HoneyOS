@@ -27,6 +27,7 @@ public class TextEditorController : MonoBehaviour
 
     public FiniteStack<string> undoStack;
     public FiniteStack<string> redoStack;
+    // public FiniteStack<string> popRedo;
 
 
 
@@ -37,6 +38,7 @@ public class TextEditorController : MonoBehaviour
         TextField.onValueChanged.AddListener(OnValueChangedTextField);
         undoStack = new FiniteStack<string>();
         redoStack = new FiniteStack<string>();
+        // popRedo = new FiniteStack<string>();
 
         NewFile();
     }
@@ -161,6 +163,9 @@ public class TextEditorController : MonoBehaviour
         ButtonManager.Instance.UndoButton.GetComponent<ButtonController>().SetInteractable(true);
         if (!string.IsNullOrEmpty(TextField.text) && TextField.text != undoStack.Peek()){
             undoStack.Push(TextField.text);
+            // if (popRedo.Peek() != TextField.text){
+            //     redoStack.Clear();
+            // }
         }
     }
 
@@ -178,9 +183,6 @@ public class TextEditorController : MonoBehaviour
         {
             undoStack.Pop();
             redoStack.Push(TextField.text);
-            // foreach(var element in redoStack){
-            //     Debug.Log("Element in the stack: " + element);
-            // }
             if (undoStack.Peek() != null){
                 TextField.text = undoStack.Peek();
             }
@@ -199,6 +201,7 @@ public class TextEditorController : MonoBehaviour
         if (redoStack.Count > 0)
         {
             TextField.text = redoStack.Peek();
+            // popRedo.Push(redoStack.Peek());
             redoStack.Pop();
             if(redoStack.Count == 0){
                 ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(false);
