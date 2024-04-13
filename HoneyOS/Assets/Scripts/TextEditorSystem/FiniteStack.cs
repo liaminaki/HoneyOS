@@ -8,7 +8,15 @@ public class FiniteStack<T> : LinkedList<T>
     private const int _size = 10;
 
     public T Peek(){
-        return this.Last.Value;
+        if (this.Last != null && this.Last.Value != null)
+        {
+            return this.Last.Value;
+        }
+        else
+        {
+            // Return the default value for type T
+            return default(T);
+        }
     }
 
     public T Pop(){

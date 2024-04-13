@@ -25,9 +25,8 @@ public class TextEditorController : MonoBehaviour
     private string currentFilePath;
     private bool SaveCancelled = false;
 
-    public FiniteStack<byte[]> undoStack;
-    public FiniteStack<byte[]> redoStack;
-    public UndoRedo currentSI;
+    public FiniteStack<string> undoStack;
+    public FiniteStack<string> redoStack;
 
 
 
@@ -36,8 +35,8 @@ public class TextEditorController : MonoBehaviour
         // File name
         FileName.onEndEdit.AddListener(OnEndEditFileName);
         TextField.onValueChanged.AddListener(OnValueChangedTextField);
-        undoStack = new FiniteStack<byte[]>();
-        redoStack = new FiniteStack<byte[]>();
+        undoStack = new FiniteStack<string>();
+        redoStack = new FiniteStack<string>();
 
         NewFile();
     }
@@ -88,6 +87,8 @@ public class TextEditorController : MonoBehaviour
             OnEndEditFileName(FileName.text);
             ClosePopUp();
             ButtonManager.Instance.SaveButton.GetComponent<ButtonController>().SetInteractable(false);
+            ButtonManager.Instance.UndoButton.GetComponent<ButtonController>().SetInteractable(false);
+            ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(false);
             SaveCancelled = false;
         }
     }
@@ -114,6 +115,8 @@ public class TextEditorController : MonoBehaviour
         ClosePopUp();
         // Set Save Button not interactable when first loading up text since no changes have been made
         ButtonManager.Instance.SaveButton.GetComponent<ButtonController>().SetInteractable(false);
+        ButtonManager.Instance.UndoButton.GetComponent<ButtonController>().SetInteractable(false);
+        ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(false);
         SaveCancelled = false;
     }
     public void CheckNewFile()
@@ -140,6 +143,8 @@ public class TextEditorController : MonoBehaviour
         {
             TextField.text = www.downloadHandler.text;
             ButtonManager.Instance.SaveButton.GetComponent<ButtonController>().SetInteractable(false);
+            ButtonManager.Instance.UndoButton.GetComponent<ButtonController>().SetInteractable(false);
+            ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(false);
         }
     }
 
@@ -153,16 +158,10 @@ public class TextEditorController : MonoBehaviour
     void OnValueChangedTextField(string newContent)
     {
         ButtonManager.Instance.SaveButton.GetComponent<ButtonController>().SetInteractable(true);
-        if (!string.IsNullOrEmpty(newContent))
-            undoStack.Push(StringToBytes(newContent));
-    }
-
-    private byte[] StringToBytes(string str){
-        return System.Text.Encoding.UTF8.GetBytes(str);
-    }
-
-    private string BytesToString(byte[] bytes){
-        return System.Text.Encoding.UTF8.GetString(bytes);
+        ButtonManager.Instance.UndoButton.GetComponent<ButtonController>().SetInteractable(true);
+        if (!string.IsNullOrEmpty(TextField.text) && TextField.text != undoStack.Peek())
+            undoStack.Push(TextField.text);
+        redoStack.Clear();
     }
 
     void ClosePopUp()
@@ -173,25 +172,29 @@ public class TextEditorController : MonoBehaviour
             PopUpManager.Instance.UnsavedChangesNewFile.GetComponent<PopupController>().Hide();
     }
 
-    public void Undo()
+    void Undo()
     {
         if (undoStack.Count > 0)
         {
-            byte[] currentState = StringToBytes(TextField.text);
-            redoStack.Push(currentState);
-            byte[] previousState = undoStack.Pop();
-            TextField.text = BytesToString(previousState);
+            undoStack.Pop();
+            redoStack.Push(TextField.text);
+            if (undoStack.Peek() != null){
+                TextField.text = undoStack.Peek();
+            }
+            else{
+                TextField.text = "";
+            }
+            ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(true);
         }
     }
 
-    public void Redo()
+    void Redo()
     {
         if (redoStack.Count > 0)
         {
-            byte[] currentState = StringToBytes(TextField.text);
-            undoStack.Push(currentState);
-            byte[] nextState = redoStack.Pop();
-            TextField.text = BytesToString(nextState);
+            redoStack.Pop();
+            undoStack.Push(TextField.text);
+            TextField.text = redoStack.Peek();
         }
     }
 
