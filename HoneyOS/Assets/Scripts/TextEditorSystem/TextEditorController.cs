@@ -48,7 +48,7 @@ public class TextEditorController : MonoBehaviour
         // Check for keyboard shortcuts
         if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
         {
-            if (Input.GetKeyDown(KeyCode.LeftShift)){
+            if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)){
                 if (Input.GetKeyDown(KeyCode.S))
                 {
                     SaveAs();
