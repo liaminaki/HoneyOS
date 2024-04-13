@@ -296,5 +296,29 @@ public class TextEditorController : MonoBehaviour
             // If no text is selected, you can optionally handle this case (e.g., display a message)
             Debug.Log("No text is selected.");
         }
+    }
+
+    public void Paste(){
+        string clipboardText = GUIUtility.systemCopyBuffer;
+        int caretPosition = TextField.caretPosition;
+
+        // Get the text before and after the caret position
+        string textBeforeCaret = TextField.text.Substring(0, caretPosition);
+        string textAfterCaret = "";
+
+        // Check if caretPosition is at the end of the text
+        if (caretPosition < TextField.text.Length)
+        {
+            textAfterCaret = TextField.text.Substring(caretPosition);
+        }
+
+        // Concatenate the clipboard text with the text after the caret position
+        string newText = textBeforeCaret + clipboardText + textAfterCaret;
+
+        // Set the new text to the input field
+        TextField.text = newText;
+
+        // Move the caret position to the end of the pasted text
+        TextField.caretPosition = caretPosition + clipboardText.Length;
     } 
 }
