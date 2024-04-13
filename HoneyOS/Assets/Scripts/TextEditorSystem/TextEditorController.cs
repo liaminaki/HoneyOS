@@ -58,6 +58,21 @@ public class TextEditorController : MonoBehaviour
             {
                 Redo();
             }
+            
+            else if (Input.GetKeyDown(KeyCode.C))
+            {
+                Copy();
+            }
+
+            else if (Input.GetKeyDown(KeyCode.V))
+            {
+                Paste();
+            }
+
+            else if (Input.GetKeyDown(KeyCode.X))
+            {
+                Cut();
+            }
         }
     }
 
