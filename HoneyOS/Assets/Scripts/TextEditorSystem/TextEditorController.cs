@@ -49,7 +49,25 @@ public class TextEditorController : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
         {
             // Check for Undo (Ctrl + Z)
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (Input.GetKeyDown(KeyCode.LeftShift)){
+                if (Input.GetKeyDown(KeyCode.S))
+                {
+                    SaveAs();
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Save();
+            }
+            else if (Input.GetKeyDown(KeyCode.N))
+            {
+                NewFile();
+            }
+            else if (Input.GetKeyDown(KeyCode.O))
+            {
+                OpenFile();
+            }
+            else if (Input.GetKeyDown(KeyCode.Z))
             {
                 Undo();
             }
