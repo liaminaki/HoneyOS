@@ -107,7 +107,7 @@ public class TextEditorController : MonoBehaviour
     public void SaveAs()
     {
         // Open Save File Panel
-        string path = StandaloneFileBrowser.SaveFilePanel("Save File", "", FileName.text, "txt");
+        string path = StandaloneFileBrowser.SaveFilePanel("Save File", "", FileName.text, "bby");
         Debug.Log("SaveAs() path after cancelling: " + path);
         if (!string.IsNullOrEmpty(path))
         {
@@ -128,7 +128,7 @@ public class TextEditorController : MonoBehaviour
     public void OpenFile()
     {
         // Open Open File Panel
-        string[] paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "txt", false);
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "bby", false);
         if (paths.Length > 0)
         {
             Debug.Log("Passed even cancel");
