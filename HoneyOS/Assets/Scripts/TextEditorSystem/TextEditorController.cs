@@ -45,52 +45,33 @@ public class TextEditorController : MonoBehaviour
     }
 
     void Update(){
-        // Check for keyboard shortcuts
-        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
-        {
+        CheckKeyboardShortcuts();
+    }
+
+    private void CheckKeyboardShortcuts() {
+        // Determine the modifier key based on the operating system
+        KeyCode modifierKey = (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer) ? KeyCode.LeftCommand : KeyCode.LeftControl;
+        KeyCode modifierKeyRight = (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer) ? KeyCode.RightCommand : KeyCode.RightControl;
+
+        // Check if the modifier key (either Left or Right) is being pressed
+        if (Input.GetKey(modifierKey) || Input.GetKey(modifierKeyRight)) {
             if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)){
                 if (Input.GetKeyDown(KeyCode.S))
                 {
                     SaveAs();
                 }
             }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                Save();
-            }
-            else if (Input.GetKeyDown(KeyCode.N))
-            {
-                NewFile();
-            }
-            else if (Input.GetKeyDown(KeyCode.O))
-            {
-                OpenFile();
-            }
-            else if (Input.GetKeyDown(KeyCode.Z))
-            {
-                Undo();
-            }
-            else if (Input.GetKeyDown(KeyCode.Y))
-            {
-                Redo();
-            }
-            
-            else if (Input.GetKeyDown(KeyCode.C))
-            {
-                Copy();
-            }
-
-            else if (Input.GetKeyDown(KeyCode.V))
-            {
-                Paste();
-            }
-
-            else if (Input.GetKeyDown(KeyCode.X))
-            {
-                Cut();
-            }
+            if (Input.GetKeyDown(KeyCode.S))        Save(); 
+            else if (Input.GetKeyDown(KeyCode.N))   NewFile();
+            else if (Input.GetKeyDown(KeyCode.O))   OpenFile();
+            else if (Input.GetKeyDown(KeyCode.Z))   Undo();
+            else if (Input.GetKeyDown(KeyCode.Y))   Redo();
+            else if (Input.GetKeyDown(KeyCode.C))   Copy();
+            else if (Input.GetKeyDown(KeyCode.V))   Paste();
+            else if (Input.GetKeyDown(KeyCode.X))   Cut();
         }
     }
+
 
     public void Save()
     {
