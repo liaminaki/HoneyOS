@@ -94,7 +94,7 @@ namespace Whisper.Samples
                 { "close all", ( () => desktopManager.CloseAllApps(), "Closing all app") },
                 { "minimize application", ( () => desktopManager.MinCurrentApp() ,"Minimizing app") },
                 { "save file", ( () => textEditor.Save(), "Saving File") },
-                { "save as", ( () => textEditor.SaveAs(), "Saving File") },
+                { "save as file", ( () => textEditor.SaveAs(), "Saving File") },
                 { "open file", ( () => textEditor.OpenFile(), "Opening File") },
                 { "new file", ( () => textEditor.NewFile(), "Creating New File") },
                 { "undo", ( () => textEditor.Undo(), "Undo text changes") },
