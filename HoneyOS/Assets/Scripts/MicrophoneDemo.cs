@@ -20,6 +20,7 @@ namespace Whisper.Samples
         public MicrophoneRecord microphoneRecord;
         public bool streamSegments = true;
         private string _buffer;
+        public bool isButtonUsed = false;
         // public bool printLanguage = true;
 
         // Add Apps
@@ -133,6 +134,7 @@ namespace Whisper.Samples
 
         private void OnButtonPressed()
         {
+            
             if (!microphoneRecord.IsRecording)
             {
                 // Play the start recording sound effect
@@ -160,6 +162,9 @@ namespace Whisper.Samples
                 // buttonText.text = "Record";
                 UnityEngine.Debug.Log("Stop recording.");
 
+                // UnityEngine.Debug.Log(isButtonUsed);
+                if(isButtonUsed)
+                    isButtonUsed = false;
 
             }
             
@@ -260,39 +265,50 @@ namespace Whisper.Samples
             UnityEngine.Debug.Log($"Unknown command: {command}");
         }
 
-    // Handle space bar input events
+        // Handle space bar input events
         void HandleSpaceBarInput()
         {
-            // Check if the space bar is pressed down
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                pressStartTime = Time.time; // Record the start time of the press
-                isLongLongPressTriggered = false; // Reset the long long press trigger flag
-            }
+            if (!isButtonUsed) {
+                // UnityEngine.Debug.Log("Hey" + isButtonUsed);
 
-            // Check if the space bar is being held down
-            if (Input.GetKey(KeyCode.Space))
-            {
-                // Calculate the duration the space bar has been held down
-                float holdDuration = Time.time - pressStartTime;
-
-                // If the hold duration exceeds longLongPressDuration and the function has not been triggered yet
-                if (!isLongLongPressTriggered && holdDuration >= longLongPressDuration)
+                // Check if the space bar is pressed down
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    // Execute the function during long long press
-                    OnButtonPressed();
-                    // Set the flag to true to prevent repeated execution while the key is still held down
-                    isLongLongPressTriggered = true;
+                    pressStartTime = Time.time; // Record the start time of the press
+                    isLongLongPressTriggered = false; // Reset the long long press trigger flag
+                }
+
+                // Check if the space bar is being held down
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    // Calculate the duration the space bar has been held down
+                    float holdDuration = Time.time - pressStartTime;
+
+                    // If the hold duration exceeds longLongPressDuration and the function has not been triggered yet
+                    if (!isLongLongPressTriggered && holdDuration >= longLongPressDuration)
+                    {
+                        // Execute the function during long long press
+                        OnButtonPressed();
+                        // Set the flag to true to prevent repeated execution while the key is still held down
+                        isLongLongPressTriggered = true;
+                    }
+                }
+
+                // Check if the space bar is released
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    if (isLongLongPressTriggered)
+                        // Execute the function when the space bar is released
+                        OnButtonPressed();
                 }
             }
+            
+        }
 
-            // Check if the space bar is released
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                if (isLongLongPressTriggered)
-                    // Execute the function when the space bar is released
-                    OnButtonPressed();
-            }
+        public void SetIsButtonUsed(bool boolean) {
+            isButtonUsed = boolean;
         }
     }
+
+    
 }
