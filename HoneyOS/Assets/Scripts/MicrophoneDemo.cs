@@ -26,6 +26,7 @@ namespace Whisper.Samples
         [Header("Apps")] 
         public DesktopManager desktopManager;
         public TextEditorController textEditor;
+        public PageController help;
 
         [Header("UI")] 
         public Button button;
@@ -85,16 +86,25 @@ namespace Whisper.Samples
         {
             commandDictionary = new Dictionary<string, (Action function, string message)>
             {
-                { "open honeybunch", ( () => desktopManager.OpenApp(0), "Opening Honeybunch" ) },
-                { "open honey bunch", ( () => desktopManager.OpenApp(0), "Opening Honeybunch" ) },
-                { "open file manager", ( () => desktopManager.OpenApp(1), "Opening File Manager" ) },
-                { "open sugar", ( () => desktopManager.OpenApp(2), "Opening Sugar" ) },
-                { "close application", ( () => desktopManager.CloseCurrentApp(), "Closing app" ) },
-                { "close all", ( () => desktopManager.CloseAllApps(), "Closing all app" ) },
+                { "open sweet", ( () => desktopManager.OpenApp(0), "Opening Sweet") },
+                { "open file manager", ( () => desktopManager.OpenApp(1), "Opening File Manager") },
+                { "open sugar", ( () => desktopManager.OpenApp(2), "Opening Sugar") },
+                { "close application", ( () => desktopManager.CloseCurrentApp(), "Closing app") },
+                { "close all", ( () => desktopManager.CloseAllApps(), "Closing all app") },
+                { "minimize application", ( () => desktopManager.MinCurrentApp() ,"Minimizing app") },
                 { "save file", ( () => textEditor.Save(), "Saving File") },
                 { "save as", ( () => textEditor.SaveAs(), "Saving File") },
                 { "open file", ( () => textEditor.OpenFile(), "Opening File") },
                 { "new file", ( () => textEditor.NewFile(), "Creating New File") },
+                { "undo", ( () => textEditor.Undo(), "Undo text changes") },
+                { "redo", ( () => textEditor.Redo(), "Redo text changes") },
+                { "copy", ( () => textEditor.Copy(), "Copying selected text") },
+                { "cut", ( () => textEditor.Cut(), "Cutting selected text") },
+                { "paste", ( () => textEditor.Paste(), "Pasting text from clipboard") },
+                { "go back", ( () => help.OpenHome(), "Going back to Home Page") },
+                { "open system basics", ( () => help.OpenSystemBasics(), "Opening System Basics") },
+                { "open application guide", ( () => help.OpenAppGuide(), "Opening Application Guide") },
+                { "open about us", ( () => help.OpenAboutUs(), "Opening About Us") },
                 // Add more commands and their corresponding functions and messages as needed
             };
         }
