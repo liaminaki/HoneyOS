@@ -20,12 +20,14 @@ namespace Whisper.Samples
         public MicrophoneRecord microphoneRecord;
         public bool streamSegments = true;
         private string _buffer;
+        public bool isButtonUsed = false;
         // public bool printLanguage = true;
 
         // Add Apps
         [Header("Apps")] 
         public DesktopManager desktopManager;
         public TextEditorController textEditor;
+        public PageController help;
 
         [Header("UI")] 
         public Button button;
@@ -85,16 +87,25 @@ namespace Whisper.Samples
         {
             commandDictionary = new Dictionary<string, (Action function, string message)>
             {
-                { "open honeybunch", ( () => desktopManager.OpenApp(0), "Opening Honeybunch" ) },
-                { "open honey bunch", ( () => desktopManager.OpenApp(0), "Opening Honeybunch" ) },
-                { "open file manager", ( () => desktopManager.OpenApp(1), "Opening File Manager" ) },
-                { "open sugar", ( () => desktopManager.OpenApp(2), "Opening Sugar" ) },
-                { "close application", ( () => desktopManager.CloseCurrentApp(), "Closing app" ) },
-                { "close all", ( () => desktopManager.CloseAllApps(), "Closing all app" ) },
+                { "open sweet", ( () => desktopManager.OpenApp(0), "Opening Sweet") },
+                { "open file manager", ( () => desktopManager.OpenApp(1), "Opening File Manager") },
+                { "open sugar", ( () => desktopManager.OpenApp(2), "Opening Sugar") },
+                { "close application", ( () => desktopManager.CloseCurrentApp(), "Closing app") },
+                { "close all", ( () => desktopManager.CloseAllApps(), "Closing all app") },
+                { "minimize application", ( () => desktopManager.MinCurrentApp() ,"Minimizing app") },
                 { "save file", ( () => textEditor.Save(), "Saving File") },
                 { "save as", ( () => textEditor.SaveAs(), "Saving File") },
                 { "open file", ( () => textEditor.OpenFile(), "Opening File") },
                 { "new file", ( () => textEditor.NewFile(), "Creating New File") },
+                { "undo", ( () => textEditor.Undo(), "Undo text changes") },
+                { "redo", ( () => textEditor.Redo(), "Redo text changes") },
+                { "copy", ( () => textEditor.Copy(), "Copying selected text") },
+                { "cut", ( () => textEditor.Cut(), "Cutting selected text") },
+                { "paste", ( () => textEditor.Paste(), "Pasting text from clipboard") },
+                { "go back", ( () => help.OpenHome(), "Going back to Home Page") },
+                { "open system basics", ( () => help.OpenSystemBasics(), "Opening System Basics") },
+                { "open application guide", ( () => help.OpenAppGuide(), "Opening Application Guide") },
+                { "open about us", ( () => help.OpenAboutUs(), "Opening About Us") },
                 // Add more commands and their corresponding functions and messages as needed
             };
         }
@@ -123,6 +134,7 @@ namespace Whisper.Samples
 
         private void OnButtonPressed()
         {
+            
             if (!microphoneRecord.IsRecording)
             {
                 // Play the start recording sound effect
@@ -150,6 +162,9 @@ namespace Whisper.Samples
                 // buttonText.text = "Record";
                 UnityEngine.Debug.Log("Stop recording.");
 
+                // UnityEngine.Debug.Log(isButtonUsed);
+                if(isButtonUsed)
+                    isButtonUsed = false;
 
             }
             
@@ -250,39 +265,50 @@ namespace Whisper.Samples
             UnityEngine.Debug.Log($"Unknown command: {command}");
         }
 
-    // Handle space bar input events
+        // Handle space bar input events
         void HandleSpaceBarInput()
         {
-            // Check if the space bar is pressed down
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                pressStartTime = Time.time; // Record the start time of the press
-                isLongLongPressTriggered = false; // Reset the long long press trigger flag
-            }
+            if (!isButtonUsed) {
+                // UnityEngine.Debug.Log("Hey" + isButtonUsed);
 
-            // Check if the space bar is being held down
-            if (Input.GetKey(KeyCode.Space))
-            {
-                // Calculate the duration the space bar has been held down
-                float holdDuration = Time.time - pressStartTime;
-
-                // If the hold duration exceeds longLongPressDuration and the function has not been triggered yet
-                if (!isLongLongPressTriggered && holdDuration >= longLongPressDuration)
+                // Check if the space bar is pressed down
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    // Execute the function during long long press
-                    OnButtonPressed();
-                    // Set the flag to true to prevent repeated execution while the key is still held down
-                    isLongLongPressTriggered = true;
+                    pressStartTime = Time.time; // Record the start time of the press
+                    isLongLongPressTriggered = false; // Reset the long long press trigger flag
+                }
+
+                // Check if the space bar is being held down
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    // Calculate the duration the space bar has been held down
+                    float holdDuration = Time.time - pressStartTime;
+
+                    // If the hold duration exceeds longLongPressDuration and the function has not been triggered yet
+                    if (!isLongLongPressTriggered && holdDuration >= longLongPressDuration)
+                    {
+                        // Execute the function during long long press
+                        OnButtonPressed();
+                        // Set the flag to true to prevent repeated execution while the key is still held down
+                        isLongLongPressTriggered = true;
+                    }
+                }
+
+                // Check if the space bar is released
+                if (Input.GetKeyUp(KeyCode.Space))
+                {
+                    if (isLongLongPressTriggered)
+                        // Execute the function when the space bar is released
+                        OnButtonPressed();
                 }
             }
+            
+        }
 
-            // Check if the space bar is released
-            if (Input.GetKeyUp(KeyCode.Space))
-            {
-                if (isLongLongPressTriggered)
-                    // Execute the function when the space bar is released
-                    OnButtonPressed();
-            }
+        public void SetIsButtonUsed(bool boolean) {
+            isButtonUsed = boolean;
         }
     }
+
+    
 }
