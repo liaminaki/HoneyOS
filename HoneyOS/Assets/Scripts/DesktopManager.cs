@@ -7,11 +7,13 @@ public class DesktopManager : MonoBehaviour
 {
     public List<App> apps; // List to store references to app scripts
 
-    private App currentAppInstance; // Reference to the currently opened app instance
+    public App currentAppInstance; // Reference to the currently opened app instance
+
+    public static DesktopManager Instance { get; private set; }
 
     private void Start()
     {
-        
+        Instance = this;
         // // Close all apps when DesktopManager starts
         // CloseAllApps();
     }
@@ -71,5 +73,10 @@ public class DesktopManager : MonoBehaviour
             currentAppInstance.Minimize();
             currentAppInstance = null;
         }
+    }
+
+    public App CurrentAppInstance {
+        get => currentAppInstance;
+        set => currentAppInstance = value;
     }
 }

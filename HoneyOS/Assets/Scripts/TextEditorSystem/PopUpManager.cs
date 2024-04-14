@@ -7,6 +7,7 @@ public class PopUpManager : MonoBehaviour
 {
     [SerializeField] GameObject unsavedChangesOpenFile;
     [SerializeField] GameObject unsavedChangesNewFile;
+    [SerializeField] GameObject unsavedChangesCloseApp;
 
     public static PopUpManager Instance { get; private set; }
 
@@ -25,6 +26,10 @@ public class PopUpManager : MonoBehaviour
             case "UnsavedChangesNewFile":
                 unsavedChangesNewFile.GetComponent<PopupController>().Show();
                 break;
+            case "UnsavedChangesCloseApp":
+                Debug.Log("SHOWPOPUP CLOSEAPP");
+                unsavedChangesCloseApp.GetComponent<PopupController>().Show();
+                break;
             default:
                 Debug.LogWarning("Error");
                 break;
@@ -41,6 +46,9 @@ public class PopUpManager : MonoBehaviour
             case "UnsavedChangesNewFile":
                 unsavedChangesNewFile.GetComponent<PopupController>().Hide();
                 break;
+            case "UnsavedChangesCloseApp":
+                unsavedChangesCloseApp.GetComponent<PopupController>().Hide();
+                break;
             default:
                 Debug.LogWarning("Error");
                 break;
@@ -53,6 +61,10 @@ public class PopUpManager : MonoBehaviour
 
     public GameObject UnsavedChangesNewFile {
         get => unsavedChangesNewFile;
+    }
+
+    public GameObject UnsavedChangesCloseApp {
+        get => unsavedChangesCloseApp;
     }
 
 }
