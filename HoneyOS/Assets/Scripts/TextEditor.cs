@@ -37,6 +37,8 @@ public class TextEditor : App
         else
         {
             Debug.Log("in else wth");
+            if (PopUpManager.Instance.UnsavedChangesCloseApp.activeInHierarchy)
+                PopUpManager.Instance.UnsavedChangesCloseApp.GetComponent<PopupController>().Hide();
             base.Close();
             // if (!textEditorController.SaveCancelled)
                 DesktopManager.Instance.CurrentAppInstance = null;
@@ -47,6 +49,8 @@ public class TextEditor : App
     {
         if (!textEditorController.SaveCancelled) 
         {
+            if (PopUpManager.Instance.UnsavedChangesCloseApp.activeInHierarchy)
+                PopUpManager.Instance.UnsavedChangesCloseApp.GetComponent<PopupController>().Hide();
             base.Close();
             DesktopManager.Instance.CurrentAppInstance = null;
         }
