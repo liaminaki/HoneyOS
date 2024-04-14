@@ -23,7 +23,7 @@ public class TextEditorController : MonoBehaviour
     [SerializeField] TMP_InputField FileName;
     [SerializeField] TMP_InputField TextField;
     private string currentFilePath;
-    private bool SaveCancelled = false;
+    public bool SaveCancelled = false;
     private bool isCut = false;
 
     public FiniteStack<string> undoStack;
@@ -186,6 +186,7 @@ public class TextEditorController : MonoBehaviour
             NewFile();
     }
 
+
     private IEnumerator OutputRoutineOpen(string url)
     {
         UnityWebRequest www = UnityWebRequest.Get(url);
@@ -220,12 +221,14 @@ public class TextEditorController : MonoBehaviour
         }
     }
 
-    void ClosePopUp()
+    public void ClosePopUp()
     {
         if (PopUpManager.Instance.UnsavedChangesOpenFile.activeInHierarchy)
             PopUpManager.Instance.UnsavedChangesOpenFile.GetComponent<PopupController>().Hide();
         if (PopUpManager.Instance.UnsavedChangesNewFile.activeInHierarchy)
             PopUpManager.Instance.UnsavedChangesNewFile.GetComponent<PopupController>().Hide();
+        // if (PopUpManager.Instance.UnsavedChangesCloseApp.activeInHierarchy)
+        //     PopUpManager.Instance.UnsavedChangesCloseApp.GetComponent<PopupController>().Hide();
     }
 
     public void Undo()

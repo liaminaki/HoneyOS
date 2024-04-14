@@ -15,7 +15,43 @@ public class TextEditor : App
         // Implement FileManager-specific reset behavior here
         textEditorController.NewFile();
     }
-   
+    public override void Close()
+    {
+        // PopUpManager.Instance.ClosePopUp("UnsavedChangesCloseApp");
+        if (PopUpManager.Instance.UnsavedChangesCloseApp.activeInHierarchy)
+            PopUpManager.Instance.UnsavedChangesCloseApp.GetComponent<PopupController>().Hide();
+        base.Close(); 
+        // if (!textEditorController.SaveCancelled)
+            DesktopManager.Instance.CurrentAppInstance = null;
+    }
+    public void CheckClose()
+    {
+        Debug.Log("iN OVERRIdE CLOSE");
+        Debug.Log("ButtonManager.Instance.SaveButton.interactable): " + ButtonManager.Instance.SaveButton.interactable);
+        if (ButtonManager.Instance.SaveButton.interactable)
+        {
+            Debug.Log("in if LESGOOOO");
+            PopUpManager.Instance.ShowPopUp("UnsavedChangesCloseApp");
+
+        }
+        else
+        {
+            Debug.Log("in else wth");
+            base.Close();
+            // if (!textEditorController.SaveCancelled)
+                DesktopManager.Instance.CurrentAppInstance = null;
+        }
+    }
+
+    public void SmartClose()
+    {
+        if (!textEditorController.SaveCancelled) 
+        {
+            base.Close();
+            DesktopManager.Instance.CurrentAppInstance = null;
+        }
+    }
+
     public void ChangeText()
     {
         // Assign the new text to the TextMeshPro component
