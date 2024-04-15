@@ -121,7 +121,6 @@ public class TextEditorController : MonoBehaviour
             ButtonManager.Instance.SaveButton.GetComponent<ButtonController>().SetInteractable(false);
             ButtonManager.Instance.UndoButton.GetComponent<ButtonController>().SetInteractable(false);
             ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(false);
-            ButtonManager.Instance.PasteButton.GetComponent<ButtonController>().SetInteractable(false);
             SaveCancelled = false;
         }
     }
@@ -150,7 +149,6 @@ public class TextEditorController : MonoBehaviour
         ButtonManager.Instance.SaveButton.GetComponent<ButtonController>().SetInteractable(false);
         ButtonManager.Instance.UndoButton.GetComponent<ButtonController>().SetInteractable(false);
         ButtonManager.Instance.RedoButton.GetComponent<ButtonController>().SetInteractable(false);
-        ButtonManager.Instance.PasteButton.GetComponent<ButtonController>().SetInteractable(false);
         SaveCancelled = false;
     }
     public void CheckNewFile()
