@@ -3,7 +3,7 @@
 A voice-command-powered Operating System simulator with Text Editor and Guide to OS app. It is currently in **Phase 1** of 3 of development and is expected to be completed around June 2024.
 
 ## Documentation
-A comprehensive details on **Phase 1** features can be accessed in [HoneyOS Phase 1 Documentation](https://docs.google.com/document/d/19FZSBX0XuIFEeafenohvKLDd5YpfsWehqJxKpPe4Ax4/edit?usp=sharing).
+A comprehensive detail on **Phase 1** features can be accessed in [HoneyOS Phase 1 Documentation](https://docs.google.com/document/d/19FZSBX0XuIFEeafenohvKLDd5YpfsWehqJxKpPe4Ax4/edit?usp=sharing).
 
 ## Future Features
 
