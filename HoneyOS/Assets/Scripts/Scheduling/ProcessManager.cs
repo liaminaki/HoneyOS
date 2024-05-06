@@ -28,7 +28,7 @@ public class ProcessManager : MonoBehaviour
         time = 0;
         prevRunningProcess = null;
 
-        SetSchedulingPolicy(SchedPolicy.SJF);
+        SetSchedulingPolicy(SchedPolicy.Prio);
 
     }
 

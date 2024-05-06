@@ -12,25 +12,25 @@ public class PrioPolicy : Policy
         if (processList.Count == 0)
             return null; // No process to run
         
-        // Initialize the first ready process as the shortest job
+        // Initialize the first ready process as the prioritized job
         Process prioritizedJob = null;
         
         foreach (Process process in processList)
         {   
 
-            // Check if the process is ready and has shorter burst time than current shortest.
-            if (process.status == Status.Ready && 
+            // Check if the process is ready and has shorter burst time than current prioritized.
+            if ((process.status == Status.Running || process.status == Status.Ready) && 
                 (prioritizedJob == null || process.priority > prioritizedJob.priority))
             {
                 prioritizedJob = process;
             }
 
             /*
-                Logic already handles FCFS if there are more than one of the same shortest burst time.
+                Logic already handles FCFS if there are more than one of the same prioritized burst time.
                 For instance, if current most prioritized has 5 priority and the next process has also 5 priority,
                 the most prioritized job will not be changed since 5 !< 5.
                 Since the list is ordered from the arrival of process, it makes sense that 
-                for every same shortest time, the current (i.e. the one who first came) is the one executed.
+                for every same prioritized time, the current (i.e. the one who first came) is the one executed.
             */
         }
         
