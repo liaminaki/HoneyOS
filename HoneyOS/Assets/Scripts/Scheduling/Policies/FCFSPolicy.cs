@@ -10,6 +10,6 @@ public class FCFSPolicy : Policy
     {
         if (processList.Count == 0)
             return null; // No process to run
-       
+        return null;
     }
 }
