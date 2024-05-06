@@ -12,13 +12,15 @@ public class SJFPolicy : Policy
         if (processList.Count == 0)
             return null; 
 
-        // Initialize the first process as the shortest job
-        Process shortestJob = processList[0];
+        // Initialize the first ready process as the shortest job
+        Process shortestJob = null;
         
         foreach (Process process in processList)
         {   
-            // Check if the process is shorter than current shortest.
-            if (process.BurstTime < shortestJob.BurstTime)
+
+            // Check if the process is ready and has shorter burst time than current shortest.
+            if (process.status == Status.Ready && 
+                (shortestJob == null || process.BurstTime < shortestJob.BurstTime))
             {
                 shortestJob = process;
             }
