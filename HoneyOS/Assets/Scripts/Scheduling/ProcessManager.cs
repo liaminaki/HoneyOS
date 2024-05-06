@@ -28,7 +28,7 @@ public class ProcessManager : MonoBehaviour
         time = 0;
         prevRunningProcess = null;
 
-        SetSchedulingPolicy(SchedPolicy.Prio);
+        SetSchedulingPolicy(SchedPolicy.FCFS);
 
     }
 
@@ -198,6 +198,8 @@ public class ProcessManager : MonoBehaviour
         }
 
         processes.Clear();
+        processCount = 0;
+        time = 0;
 
         isPlaying = false;
     }
