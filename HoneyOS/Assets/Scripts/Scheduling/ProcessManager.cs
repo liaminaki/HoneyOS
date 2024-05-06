@@ -1,31 +1,32 @@
-using System;
+// using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class ProcessManager : MonoBehaviour
 {
-    private int ProcessCount;
-    private List<Process> Processes; 
-    private Process RunningProcess;
-    private Process PrevRunningProcess;
+    private int processCount;
+    private List<Process> processes; 
+    private Process runningProcess;
+    private Process prevRunningProcess;
     private bool isPlaying;
     // private Stack stack;
-    private Policy SchedulingPolicy;
+    private Policy schedulingPolicy;
     private int time;
 
-    private GameObject ProcessHolder;
-    [SerializeField] ProcessPrefab;
+    private GameObject processHolder;
+    public GameObject processPrefab;
   
-    Awake() {
-        ProcessCount = 0;
-        Processes = new List<Process>();
+    void Awake() {
+        processCount = 0;
+        processes = new List<Process>();
         isPlaying = false;
         // stack = new Stack();
         time = 0;
-        PrevRunningProcess = null;
+        prevRunningProcess = null;
 
         // Set this to GameObject that holds the processes or just grab reference
-        ProcessHolder = new GameObject("ProcessHolder");  // Test holder / container for processes
+        processHolder = new GameObject("processHolder");  // Test holder / container for processes
     }
   
     public void SetSchedulingPolicy(string policy)
@@ -39,7 +40,7 @@ public class ProcessManager : MonoBehaviour
                 schedulingPolicy = new SJFPolicy();
                 break;
             case "Priority":
-                schedulingPolicy = new PriorityPolicy();
+                schedulingPolicy = new PrioPolicy();
                 break;
             case "RR":
                 schedulingPolicy = new RRPolicy();
@@ -69,47 +70,47 @@ public class ProcessManager : MonoBehaviour
     public void Next()
     {
         // Get running process from chosen scheduling policy
-        RunningProcess = schedulingPolicy.GetRunningProcess(ProcessesList);
+        runningProcess = schedulingPolicy.GetRunningProcess(processes);
 
-        if (RunningProcess != PrevRunningProcess) 
+        if (runningProcess != prevRunningProcess) 
         {   
-            if (PrevRunningProcess != null)
-                PrevRunningProcess.SetStatus(Status.Ready);
+            if (prevRunningProcess != null)
+                prevRunningProcess.SetStatus(Status.Ready);
             
-            RunningProcess.SetStatus(Status.Running);
-            PrevRunningProcess = RunningProcess;
+            runningProcess.SetStatus(Status.Running);
+            prevRunningProcess = runningProcess;
         }            
         
-        ++ProcessCount;
+        ++processCount;
         ++time;
         
-        RunningProcess.DecBurstTime();
+        runningProcess.DecBurstTime();
         
-        foreach (Process process in Processes) 
+        foreach (Process process in processes) 
         {
             process.DecWaitTime();  // Decrement wait time for all processes
             process.UpdateStatus(); // Update status of all process
             
-            if (process.GetStatus() == Status.Terminated)
-                Processes.remove(process);
+            if (process.status == Status.Terminated)
+                processes.Remove(process);
             
         }
         
         // Decide whether to add new process 
-        if (Random.Range(1, 9) == 1) 
+        if (UnityEngine.Random.Range(1, 9) == 1) 
             AddProcess();
         
     }
     // OPTIONAL
     // public void Previous()
     // {
-    //     --ProcessCount;
+    //     --processCount;
     //     --time;
         
-    //     RunningProcess.IncBurstTime();
+    //     runningProcess.IncBurstTime();
         
     //     // Decrement wait time for all processes
-    //     foreach (Process process in Processes) 
+    //     foreach (Process process in processes) 
     //     {
     //         process.IncWaitTime();
     //     }
@@ -123,33 +124,32 @@ public class ProcessManager : MonoBehaviour
     public void Stop()
     {
         // Decrement wait time for all processes
-        foreach (Process process in Processes) 
+        foreach (Process process in processes) 
         {
-            process.SetStatus(Status.Terminated)
+            process.SetStatus(Status.Terminated);
         }
     }
         
     public void AddProcess()
     {
-        // Instantiate a new process with ProcessCount as its ID and a default time
-        Process newProcess = new Process(ProcessCount, defaultProcessTime);
+        // Instantiate a new process with processCount as its ID and a default time
+        // Process newProcess = new Process(processCount, defaultProcessTime);
         
-        // Add the new process to the Processes list
-        Processes.Add(newProcess);
+        // Add the new process to the processes list
+        // processes.Add(newProcess);
 
-        GameObject process = Object.Instantiate(ProcessPrefabs);
-        // Sets "ProcessHolder" as the new parent of the process GameObject.
-        process.transform.SetParent(ProcessHolder); // Set position relative to parent
-        // process.transform.SetParent(ProcessHolder, false); // Set position in global orientation
+        GameObject process = Object.Instantiate(processPrefab, processHolder.transform);
+        // Sets "processHolder" as the new parent of the process GameObject.
+        process.transform.SetParent(processHolder.transform); // Set position relative to parent
+        // process.transform.SetParent(processHolder.transform, false); // Set position in global orientation
 
-        // If components not set in prefab
-        process.AddComponent<Process>();
-        newProcess.idText = 
+    
+ 
     }
     
     // private void Randomize(int min, int max) {
     //     return Randomizer.i.Randomize(min, max + 1); // Include min and max
     // }
     
-    private Inc
+    // private Inc
 }
