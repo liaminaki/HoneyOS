@@ -71,6 +71,63 @@ public class ProcessManager : MonoBehaviour
         
     public void Next()
     {
+        // // Get running process from chosen scheduling policy
+        // runningProcess = schedulingPolicy.GetRunningProcess(processes);
+
+        // if (runningProcess != null)
+        // {
+
+        //     if (runningProcess != prevRunningProcess) 
+        //     {   
+        //         if (prevRunningProcess != null)
+        //             prevRunningProcess.SetStatus(Status.Ready);
+                
+        //         runningProcess.SetStatus(Status.Running);
+        //         prevRunningProcess = runningProcess;
+        //     }            
+            
+        //     ++processCount;
+        //     ++time;
+            
+        //     runningProcess.DecBurstTime();
+            
+        //     foreach (Process process in processes) 
+        //     {
+        //         process.DecWaitTime();  // Decrement wait time for all processes
+        //         process.UpdateStatus(); // Update status of all process
+        //         process.UpdateAttributes();
+                
+        //         if (process.status == Status.Terminated)
+        //             processes.Remove(process);
+                
+        //     }
+            
+        // }
+        UpdateProcesses();
+
+
+        // Decide whether to add new process 
+        if (UnityEngine.Random.Range(1, 9) == 1) 
+            AddProcess(); 
+        
+    }
+    // OPTIONAL
+    // public void Previous()
+    // {
+    //     --processCount;
+    //     --time;
+        
+    //     runningProcess.IncBurstTime();
+        
+    //     // Decrement wait time for all processes
+    //     foreach (Process process in processes) 
+    //     {
+    //         process.IncWaitTime();
+    //     }
+    // }
+
+    public void UpdateProcesses()
+    {
         // Get running process from chosen scheduling policy
         runningProcess = schedulingPolicy.GetRunningProcess(processes);
 
@@ -103,26 +160,7 @@ public class ProcessManager : MonoBehaviour
             }
             
         }
-
-        // Decide whether to add new process 
-        // if (UnityEngine.Random.Range(1, 9) == 1) 
-        //     AddProcess(); 
-        
     }
-    // OPTIONAL
-    // public void Previous()
-    // {
-    //     --processCount;
-    //     --time;
-        
-    //     runningProcess.IncBurstTime();
-        
-    //     // Decrement wait time for all processes
-    //     foreach (Process process in processes) 
-    //     {
-    //         process.IncWaitTime();
-    //     }
-    // }
         
     public void Pause()
     {
@@ -152,7 +190,7 @@ public class ProcessManager : MonoBehaviour
 
         processes.Add(newProcess.GetComponent<Process>());
 
-        Next();
+        UpdateProcesses();
     
  
     }
