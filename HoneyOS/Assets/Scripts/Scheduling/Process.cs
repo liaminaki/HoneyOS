@@ -20,10 +20,13 @@ public class Process : MonoBehaviour
     private int memorySize;
     public Status status { get; private set; }
     private float waitTime;
+    public GameObject objReference { get; private set; }
 
 
-    public void InitAttributes(int id, int arrivalTime)
-    {
+    // Init attributes
+    public void InitAttributes(GameObject objReference, int id, int arrivalTime)
+    {   
+        this.objReference = objReference;
         this.id = id;
         this.arrivalTime = arrivalTime;
         priority = Random.Range(1,101); // Generate a number from 1 to 100

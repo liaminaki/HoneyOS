@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class ProcessManager : MonoBehaviour
 {
@@ -16,36 +17,41 @@ public class ProcessManager : MonoBehaviour
 
     public GameObject processesContainer;
     public GameObject processPrefab;
+
+    public TMP_Text schedPolicyText;
   
+    public 
     void Awake() {
         processCount = 0;
         processes = new List<Process>();
         isPlaying = false;
-        // stack = new Stack();
         time = 0;
         prevRunningProcess = null;
 
-        SetSchedulingPolicy("SJF");
+        SetSchedulingPolicy(SchedPolicy.SJF);
 
-        // // Set this to GameObject that holds the processes or just grab reference
-        // processesContainer = new GameObject("processHolder");  // Test holder / container for processes
     }
-  
-    public void SetSchedulingPolicy(string policy)
+
+    public enum SchedPolicy { FCFS, SJF, Prio, RR }
+    public void SetSchedulingPolicy(SchedPolicy policy)
     {
         switch (policy)
         {
-            case "FCFS":
+            case SchedPolicy.FCFS:
                 schedulingPolicy = new FCFSPolicy();
+                schedPolicyText.text = "First Come, First Serve";
                 break;
-            case "SJF":
+            case SchedPolicy.SJF:
                 schedulingPolicy = new SJFPolicy();
+                schedPolicyText.text = "Shortest Job First";
                 break;
-            case "Priority":
+            case SchedPolicy.Prio:
                 schedulingPolicy = new PrioPolicy();
+                schedPolicyText.text = "Priority";
                 break;
-            case "RR":
+            case SchedPolicy.RR:
                 schedulingPolicy = new RRPolicy();
+                schedPolicyText.text = "Round Robin";
                 break;
             default:
                 // Handle unknown scheduling policies
@@ -57,16 +63,16 @@ public class ProcessManager : MonoBehaviour
     public void Play() 
     {
         isPlaying = true;
+        StartCoroutine(CountDown());
+    }
+
+    private IEnumerator CountDown()
+    {
         while(isPlaying)
         {
-            StartCoroutine(CountDown());
-        
+            yield return new WaitForSeconds(1f);
+            Next();
         }
-    }
-  
-    private IEnumerator CountDown(){
-        yield return new WaitForSeconds(1f);
-        Next();
     }
         
     public void Next()
@@ -109,8 +115,8 @@ public class ProcessManager : MonoBehaviour
         UpdateProcesses();
 
         // Decide whether to add new process 
-        if (UnityEngine.Random.Range(1, 9) == 1) 
-            AddProcess(); 
+        if (UnityEngine.Random.Range(1, 5) == 1) 
+            AddProcess(true); 
         
     }
     // OPTIONAL
@@ -149,16 +155,31 @@ public class ProcessManager : MonoBehaviour
               
         }
 
+        Process processToDestroy = null;
+
         foreach (Process process in processes) 
         {
             process.DecWaitTime();  // Decrement wait time for all processes
             process.UpdateStatus(); // Update status of all process
             process.UpdateAttributes();
             
-            // if (process.status == Status.Terminated)
-            //     processes.Remove(process);
             
+            // Create new reference to terminated process since cant be done while iterating
+            // Works since there is only one or no processes that will terminated at a time
+            if (process.status == Status.Terminated) {
+                processToDestroy = process;
+            }    
+
         }
+
+        // Remove terminated process if there is one
+        if (processToDestroy != null)
+        {
+            processes.Remove(processToDestroy);
+            Destroy(processToDestroy.objReference);
+        }
+            
+
     }
         
     public void Pause()
@@ -168,14 +189,20 @@ public class ProcessManager : MonoBehaviour
         
     public void Stop()
     {
-        // Decrement wait time for all processes
-        foreach (Process process in processes) 
+        List<Process> processesToRemove = new List<Process>(processes); // Create a copy of the list
+
+        foreach (Process process in processesToRemove)
         {
-            process.SetStatus(Status.Terminated);
+            processes.Remove(process); // Remove the process from the original list
+            Destroy(process.objReference); // Destroy the associated GameObject
         }
+
+        processes.Clear();
+
+        isPlaying = false;
     }
         
-    public void AddProcess()
+    public void AddProcess(bool isFromNext)
     {
         // Instantiate a new process with processCount as its ID and a default time
         // Process newProcess = new Process(processCount, defaultProcessTime);
@@ -183,15 +210,18 @@ public class ProcessManager : MonoBehaviour
         // Add the new process to the processes list
 
         GameObject newProcess = Object.Instantiate(processPrefab, processesContainer.transform);
+        
         // Sets "processHolder" as the new parent of the process GameObject.
         newProcess.transform.SetParent(processesContainer.transform); // Set position relative to parent
         // process.transform.SetParent(processHolder.transform, false); // Set position in global orientation
 
         Process process = newProcess.GetComponent<Process>();
         processes.Add(process);
-        process.InitAttributes(++processCount, ++time);
+        process.InitAttributes(newProcess, ++processCount, ++time);
+        process.UpdateAttributes();
 
-        UpdateProcesses();
+        if (!isFromNext)
+            UpdateProcesses();
     
     }
     

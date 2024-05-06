@@ -769,7 +769,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_text
-      value: 0
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_margin.x
@@ -894,7 +894,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_text
-      value: 1
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_margin.x
@@ -1019,7 +1019,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_text
-      value: 1
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_margin.x
@@ -1144,7 +1144,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_text
-      value: Ready
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_margin.x
@@ -1269,7 +1269,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_text
-      value: 12
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_margin.x
@@ -1394,7 +1394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_text
-      value: 12
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7220152653769867804, guid: 1a3e38f212be64addbd998961f6ee766, type: 3}
       propertyPath: m_margin.x
