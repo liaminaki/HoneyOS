@@ -13,7 +13,7 @@ public class Process : MonoBehaviour
     public TMP_Text memorySizeText;
     public TMP_Text statusText;
 
-    private int id;
+    public int id { get; private set; }
     public int priority { get; private set; }
     private int arrivalTime;
     public int burstTime { get; private set; }
