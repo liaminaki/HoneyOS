@@ -103,8 +103,10 @@ public class ProcessManager : MonoBehaviour
         //     }
             
         // }
-        UpdateProcesses();
 
+        ++time;
+
+        UpdateProcesses();
 
         // Decide whether to add new process 
         if (UnityEngine.Random.Range(1, 9) == 1) 
@@ -136,28 +138,25 @@ public class ProcessManager : MonoBehaviour
 
             if (runningProcess != prevRunningProcess) 
             {   
-                if (prevRunningProcess != null)
+                if (prevRunningProcess != null && prevRunningProcess.status != Status.Terminated) // Second part might not be necessary if delete lahos ang terminated
                     prevRunningProcess.SetStatus(Status.Ready);
                 
                 runningProcess.SetStatus(Status.Running);
                 prevRunningProcess = runningProcess;
             }            
             
-            ++processCount;
-            ++time;
-            
             runningProcess.DecBurstTime();
+              
+        }
+
+        foreach (Process process in processes) 
+        {
+            process.DecWaitTime();  // Decrement wait time for all processes
+            process.UpdateStatus(); // Update status of all process
+            process.UpdateAttributes();
             
-            foreach (Process process in processes) 
-            {
-                process.DecWaitTime();  // Decrement wait time for all processes
-                process.UpdateStatus(); // Update status of all process
-                process.UpdateAttributes();
-                
-                if (process.status == Status.Terminated)
-                    processes.Remove(process);
-                
-            }
+            // if (process.status == Status.Terminated)
+            //     processes.Remove(process);
             
         }
     }
@@ -188,11 +187,12 @@ public class ProcessManager : MonoBehaviour
         newProcess.transform.SetParent(processesContainer.transform); // Set position relative to parent
         // process.transform.SetParent(processHolder.transform, false); // Set position in global orientation
 
-        processes.Add(newProcess.GetComponent<Process>());
+        Process process = newProcess.GetComponent<Process>();
+        processes.Add(process);
+        process.InitAttributes(++processCount, ++time);
 
         UpdateProcesses();
     
- 
     }
     
     // private void Randomize(int min, int max) {

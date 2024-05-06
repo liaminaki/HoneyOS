@@ -19,7 +19,7 @@ public class SJFPolicy : Policy
         {   
 
             // Check if the process is ready and has shorter burst time than current shortest.
-            if (process.status == Status.Ready && 
+            if ((process.status == Status.Running || process.status == Status.Ready) && 
                 (shortestJob == null || process.burstTime < shortestJob.burstTime))
             {
                 shortestJob = process;

@@ -22,23 +22,22 @@ public class Process : MonoBehaviour
     private float waitTime;
 
 
-    Process(int id, int arrivalTime)
+    public void InitAttributes(int id, int arrivalTime)
     {
         this.id = id;
         this.arrivalTime = arrivalTime;
-
-        
-    }
-
-    void Awake()
-    {
         priority = Random.Range(1,101); // Generate a number from 1 to 100
         burstTime = Random.Range(1,10);
         memorySize = Random.Range(1,1000);
         SetStatus(Status.New);
         waitTime = Random.Range(0,10);
-        UpdateAttributes();
     }
+
+    // void Awake()
+    // {
+        
+
+    // }
   
     public void UpdateAttributes() 
     {
@@ -56,10 +55,13 @@ public class Process : MonoBehaviour
     }
 
     public void UpdateStatus()
-    {
-        if (waitTime > 0) SetStatus(Status.Waiting);
-        else if (waitTime <= 0 && !IsStatus(Status.Running)) SetStatus(Status.Ready);
-        else if (burstTime <= 0) SetStatus(Status.Terminated);
+    {   
+        if (status != Status.Terminated)
+        {
+            if (waitTime > 0) SetStatus(Status.Waiting);
+            else if (waitTime <= 0 && !IsStatus(Status.Running)) SetStatus(Status.Ready);
+            else if (burstTime <= 0) SetStatus(Status.Terminated);
+        }
 
         // Change to Status.Running in ProcessManager
     }
