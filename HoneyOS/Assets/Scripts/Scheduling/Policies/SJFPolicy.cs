@@ -18,7 +18,7 @@ public class SJFPolicy : Policy
         foreach (Process process in processList)
         {   
             // Check if the process is shorter than current shortest.
-            if (process.burstTime < shortestJob.burstTime)
+            if (process.BurstTime < shortestJob.BurstTime)
             {
                 shortestJob = process;
             }
