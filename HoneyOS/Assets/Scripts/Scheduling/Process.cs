@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Process
+public class Process : MonoBehaviour
 {   
     public TMP_Text idText;
     public TMP_Text priorityText;
@@ -16,7 +16,7 @@ public class Process
     private int id;
     private int priority;
     private int arrivalTime;
-    private int burstTime;
+    public int burstTime { get; private set; }
     private int memorySize;
     public Status status { get; private set; }
     private float waitTime;
@@ -25,16 +25,22 @@ public class Process
     Process(int id, int arrivalTime)
     {
         this.id = id;
-        priority = Random.Range(1,101); // Generate a number from 1 to 100
         this.arrivalTime = arrivalTime;
+
+        
+    }
+
+    void Awake()
+    {
+        priority = Random.Range(1,101); // Generate a number from 1 to 100
         burstTime = Random.Range(1,10);
         memorySize = Random.Range(1,1000);
         SetStatus(Status.New);
-        waitTime = Random.Range(0,5);
-        
+        waitTime = Random.Range(0,10);
+        UpdateAttributes();
     }
   
-    void UpdateAttributes() 
+    public void UpdateAttributes() 
     {
         idText.text = id.ToString();
         priorityText.text = priority.ToString();

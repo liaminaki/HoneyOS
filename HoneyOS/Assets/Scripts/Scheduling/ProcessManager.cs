@@ -14,7 +14,7 @@ public class ProcessManager : MonoBehaviour
     private Policy schedulingPolicy;
     private int time;
 
-    private GameObject processHolder;
+    public GameObject processesContainer;
     public GameObject processPrefab;
   
     void Awake() {
@@ -25,8 +25,10 @@ public class ProcessManager : MonoBehaviour
         time = 0;
         prevRunningProcess = null;
 
-        // Set this to GameObject that holds the processes or just grab reference
-        processHolder = new GameObject("processHolder");  // Test holder / container for processes
+        SetSchedulingPolicy("SJF");
+
+        // // Set this to GameObject that holds the processes or just grab reference
+        // processesContainer = new GameObject("processHolder");  // Test holder / container for processes
     }
   
     public void SetSchedulingPolicy(string policy)
@@ -72,33 +74,39 @@ public class ProcessManager : MonoBehaviour
         // Get running process from chosen scheduling policy
         runningProcess = schedulingPolicy.GetRunningProcess(processes);
 
-        if (runningProcess != prevRunningProcess) 
-        {   
-            if (prevRunningProcess != null)
-                prevRunningProcess.SetStatus(Status.Ready);
-            
-            runningProcess.SetStatus(Status.Running);
-            prevRunningProcess = runningProcess;
-        }            
-        
-        ++processCount;
-        ++time;
-        
-        runningProcess.DecBurstTime();
-        
-        foreach (Process process in processes) 
+        if (runningProcess != null)
         {
-            process.DecWaitTime();  // Decrement wait time for all processes
-            process.UpdateStatus(); // Update status of all process
+
+            if (runningProcess != prevRunningProcess) 
+            {   
+                if (prevRunningProcess != null)
+                    prevRunningProcess.SetStatus(Status.Ready);
+                
+                runningProcess.SetStatus(Status.Running);
+                prevRunningProcess = runningProcess;
+            }            
             
-            if (process.status == Status.Terminated)
-                processes.Remove(process);
+            ++processCount;
+            ++time;
+            
+            runningProcess.DecBurstTime();
+            
+            foreach (Process process in processes) 
+            {
+                process.DecWaitTime();  // Decrement wait time for all processes
+                process.UpdateStatus(); // Update status of all process
+                process.UpdateAttributes();
+                
+                if (process.status == Status.Terminated)
+                    processes.Remove(process);
+                
+            }
             
         }
-        
+
         // Decide whether to add new process 
-        if (UnityEngine.Random.Range(1, 9) == 1) 
-            AddProcess();
+        // if (UnityEngine.Random.Range(1, 9) == 1) 
+        //     AddProcess(); 
         
     }
     // OPTIONAL
@@ -136,13 +144,15 @@ public class ProcessManager : MonoBehaviour
         // Process newProcess = new Process(processCount, defaultProcessTime);
         
         // Add the new process to the processes list
-        // processes.Add(newProcess);
 
-        GameObject process = Object.Instantiate(processPrefab, processHolder.transform);
+        GameObject newProcess = Object.Instantiate(processPrefab, processesContainer.transform);
         // Sets "processHolder" as the new parent of the process GameObject.
-        process.transform.SetParent(processHolder.transform); // Set position relative to parent
+        newProcess.transform.SetParent(processesContainer.transform); // Set position relative to parent
         // process.transform.SetParent(processHolder.transform, false); // Set position in global orientation
 
+        processes.Add(newProcess.GetComponent<Process>());
+
+        Next();
     
  
     }
