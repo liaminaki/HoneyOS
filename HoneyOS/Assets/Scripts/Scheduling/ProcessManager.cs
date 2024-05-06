@@ -28,28 +28,29 @@ public class ProcessManager : MonoBehaviour
         time = 0;
         prevRunningProcess = null;
 
-        SetSchedulingPolicy(SchedPolicy.FCFS);
+        // SetSchedulingPolicy(SchedPolicy.FCFS);
 
     }
 
-    public enum SchedPolicy { FCFS, SJF, Prio, RR }
-    public void SetSchedulingPolicy(SchedPolicy policy)
+    // public enum SchedPolicy { FCFS, SJF, Prio, RR }
+    
+    public void SetSchedulingPolicy(string policy)
     {
         switch (policy)
         {
-            case SchedPolicy.FCFS:
+            case "FCFS":
                 schedulingPolicy = new FCFSPolicy();
                 schedPolicyText.text = "First Come, First Serve";
                 break;
-            case SchedPolicy.SJF:
+            case "SJF":
                 schedulingPolicy = new SJFPolicy();
                 schedPolicyText.text = "Shortest Job First";
                 break;
-            case SchedPolicy.Prio:
+            case "Prio":
                 schedulingPolicy = new PrioPolicy();
                 schedPolicyText.text = "Priority";
                 break;
-            case SchedPolicy.RR:
+            case "RR":
                 schedulingPolicy = new RRPolicy();
                 schedPolicyText.text = "Round Robin";
                 break;
