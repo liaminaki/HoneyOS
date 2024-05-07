@@ -19,6 +19,7 @@ public class ProcessManager : MonoBehaviour
     public GameObject processPrefab;
 
     public TMP_Text schedPolicyText;
+    public TMP_Text timeText;
   
     public 
     void Awake() {
@@ -27,7 +28,7 @@ public class ProcessManager : MonoBehaviour
         isPlaying = false;
         time = 0;
         prevRunningProcess = null;
-
+        timeText.text = time.ToString();
         // SetSchedulingPolicy(SchedPolicy.FCFS);
 
     }
@@ -117,7 +118,11 @@ public class ProcessManager : MonoBehaviour
 
         // Decide whether to add new process 
         if (UnityEngine.Random.Range(1, 5) == 1) 
-            AddProcess(true); 
+        {   
+            --time; // To avoid double time increment
+            AddProcess(true);
+             
+        }
         
     }
     // OPTIONAL
@@ -136,7 +141,10 @@ public class ProcessManager : MonoBehaviour
     // }
 
     public void UpdateProcesses()
-    {
+    {   
+        // Update timeText text
+        timeText.text = time.ToString();
+
         // Get running process from chosen scheduling policy
         runningProcess = schedulingPolicy.GetRunningProcess(processes);
 
@@ -201,6 +209,7 @@ public class ProcessManager : MonoBehaviour
         processes.Clear();
         processCount = 0;
         time = 0;
+        timeText.text = time.ToString();
 
         isPlaying = false;
     }
