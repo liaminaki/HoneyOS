@@ -20,6 +20,7 @@ public class Process : MonoBehaviour
     private int memorySize;
     public Status status { get; private set; }
     private float waitTime;
+    public int quantumTime {get; private set;}
     public GameObject objReference { get; private set; }
 
 
@@ -34,6 +35,7 @@ public class Process : MonoBehaviour
         memorySize = Random.Range(1,1000);
         SetStatus(Status.New);
         waitTime = Random.Range(0,10);
+        quantumTime = 4;
     }
 
     // void Awake()
@@ -82,6 +84,13 @@ public class Process : MonoBehaviour
     public void IncBurstTime()	{ burstTime++; }
     public void DecWaitTime() 	{ waitTime--; }
     public void IncWaitTime()   { waitTime++; }
+    public void DecQuantumTime() {
+        if (quantumTime == 0 || burstTime == 0){
+            quantumTime = 4;
+        }
+        quantumTime--;
+    }
+    public void IncQuantumTime() {quantumTime++;}
 
     // private int Randomize(int min, int max) 
     // {
