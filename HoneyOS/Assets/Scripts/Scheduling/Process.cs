@@ -1,9 +1,10 @@
-using System;
+// using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 
-class Process
+public class Process : MonoBehaviour
 {   
     public TMP_Text idText;
     public TMP_Text priorityText;
@@ -12,28 +13,36 @@ class Process
     public TMP_Text memorySizeText;
     public TMP_Text statusText;
 
-    private int id;
-    private int priority;
+    public int id { get; private set; }
+    public int priority { get; private set; }
     private int arrivalTime;
-    private int burstTime;
+    public int burstTime { get; private set; }
     private int memorySize;
-    private Status status;
+    public Status status { get; private set; }
     private float waitTime;
+    public GameObject objReference { get; private set; }
 
 
-    Process(id, arrivalTime)
-    {
+    // Init attributes
+    public void InitAttributes(GameObject objReference, int id, int arrivalTime)
+    {   
+        this.objReference = objReference;
         this.id = id;
-        priority = Random.Range(1,101); // Generate a number from 1 to 100
         this.arrivalTime = arrivalTime;
+        priority = Random.Range(1,101); // Generate a number from 1 to 100
         burstTime = Random.Range(1,10);
         memorySize = Random.Range(1,1000);
         SetStatus(Status.New);
-        waitTime = (0,5);
-        
+        waitTime = Random.Range(0,10);
     }
+
+    // void Awake()
+    // {
+        
+
+    // }
   
-    void UpdateAttributes() 
+    public void UpdateAttributes() 
     {
         idText.text = id.ToString();
         priorityText.text = priority.ToString();
@@ -48,19 +57,22 @@ class Process
 
     }
 
-    private void UpdateStatus()
-    {
-        if (waitTime > 0) SetStatus(Status.Waiting);
-        else if (waitTime <= 0 && !IsStatus(Status.Running)) SetStatus(Status.Ready)
-        else if (burstTime <= 0) SetStatus(Status.Terminated);
+    public void UpdateStatus()
+    {   
+        if (status != Status.Terminated)
+        {
+            if (waitTime > 0) SetStatus(Status.Waiting);
+            else if (waitTime <= 0 && !IsStatus(Status.Running)) SetStatus(Status.Ready);
+            else if (burstTime <= 0) SetStatus(Status.Terminated);
+        }
 
         // Change to Status.Running in ProcessManager
     }
 
-    public void GetStatus(Status newStatus)
-    {
-        return status;
-    }
+    // public Status GetStatus()
+    // {
+    //     return status;
+    // }
 
     public void SetStatus(Status newStatus) { status = newStatus; }
 

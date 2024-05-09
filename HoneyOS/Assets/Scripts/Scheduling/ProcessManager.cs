@@ -1,48 +1,59 @@
-using System;
+// using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using TMPro;
 
 public class ProcessManager : MonoBehaviour
 {
-    private int ProcessCount;
-    private List<Process> Processes; 
-    private Process RunningProcess;
-    private Process PrevRunningProcess;
+    private int processCount;
+    private List<Process> processes; 
+    private Process runningProcess;
+    private Process prevRunningProcess;
     private bool isPlaying;
     // private Stack stack;
-    private Policy SchedulingPolicy;
+    private Policy schedulingPolicy;
     private int time;
 
-    private GameObject ProcessHolder;
-    [SerializeField] ProcessPrefab;
-  
-    Awake() {
-        ProcessCount = 0;
-        Processes = new List<Process>();
-        isPlaying = false;
-        // stack = new Stack();
-        time = 0;
-        PrevRunningProcess = null;
+    public GameObject processesContainer;
+    public GameObject processPrefab;
 
-        // Set this to GameObject that holds the processes or just grab reference
-        ProcessHolder = new GameObject("ProcessHolder");  // Test holder / container for processes
-    }
+    public TMP_Text schedPolicyText;
+    public TMP_Text timeText;
   
+    public 
+    void Awake() {
+        processCount = 0;
+        processes = new List<Process>();
+        isPlaying = false;
+        time = 0;
+        prevRunningProcess = null;
+        timeText.text = time.ToString();
+        // SetSchedulingPolicy(SchedPolicy.FCFS);
+
+    }
+
+    // public enum SchedPolicy { FCFS, SJF, Prio, RR }
+    
     public void SetSchedulingPolicy(string policy)
     {
         switch (policy)
         {
             case "FCFS":
                 schedulingPolicy = new FCFSPolicy();
+                schedPolicyText.text = "First Come, First Serve";
                 break;
             case "SJF":
                 schedulingPolicy = new SJFPolicy();
+                schedPolicyText.text = "Shortest Job First";
                 break;
-            case "Priority":
-                schedulingPolicy = new PriorityPolicy();
+            case "Prio":
+                schedulingPolicy = new PrioPolicy();
+                schedPolicyText.text = "Priority";
                 break;
             case "RR":
                 schedulingPolicy = new RRPolicy();
+                schedPolicyText.text = "Round Robin";
                 break;
             default:
                 // Handle unknown scheduling policies
@@ -54,66 +65,131 @@ public class ProcessManager : MonoBehaviour
     public void Play() 
     {
         isPlaying = true;
+        StartCoroutine(CountDown());
+    }
+
+    private IEnumerator CountDown()
+    {
         while(isPlaying)
         {
-            StartCoroutine(CountDown());
-        
+            yield return new WaitForSeconds(1f);
+            Next();
         }
-    }
-  
-    private IEnumerator CountDown(){
-        yield return new WaitForSeconds(1f);
-        Next();
     }
         
     public void Next()
     {
-        // Get running process from chosen scheduling policy
-        RunningProcess = schedulingPolicy.GetRunningProcess(ProcessesList);
+        // // Get running process from chosen scheduling policy
+        // runningProcess = schedulingPolicy.GetRunningProcess(processes);
 
-        if (RunningProcess != PrevRunningProcess) 
-        {   
-            if (PrevRunningProcess != null)
-                PrevRunningProcess.SetStatus(Status.Ready);
+        // if (runningProcess != null)
+        // {
+
+        //     if (runningProcess != prevRunningProcess) 
+        //     {   
+        //         if (prevRunningProcess != null)
+        //             prevRunningProcess.SetStatus(Status.Ready);
+                
+        //         runningProcess.SetStatus(Status.Running);
+        //         prevRunningProcess = runningProcess;
+        //     }            
             
-            RunningProcess.SetStatus(Status.Running);
-            PrevRunningProcess = RunningProcess;
-        }            
-        
-        ++ProcessCount;
+        //     ++processCount;
+        //     ++time;
+            
+        //     runningProcess.DecBurstTime();
+            
+        //     foreach (Process process in processes) 
+        //     {
+        //         process.DecWaitTime();  // Decrement wait time for all processes
+        //         process.UpdateStatus(); // Update status of all process
+        //         process.UpdateAttributes();
+                
+        //         if (process.status == Status.Terminated)
+        //             processes.Remove(process);
+                
+        //     }
+            
+        // }
+
         ++time;
-        
-        RunningProcess.DecBurstTime();
-        
-        foreach (Process process in Processes) 
-        {
-            process.DecWaitTime();  // Decrement wait time for all processes
-            process.UpdateStatus(); // Update status of all process
-            
-            if (process.GetStatus() == Status.Terminated)
-                Processes.remove(process);
-            
-        }
-        
+
+        UpdateProcesses();
+
         // Decide whether to add new process 
-        if (Random.Range(1, 9) == 1) 
-            AddProcess();
+        if (UnityEngine.Random.Range(1, 5) == 1) 
+        {   
+            --time; // To avoid double time increment
+            AddProcess(true);
+             
+        }
         
     }
     // OPTIONAL
     // public void Previous()
     // {
-    //     --ProcessCount;
+    //     --processCount;
     //     --time;
         
-    //     RunningProcess.IncBurstTime();
+    //     runningProcess.IncBurstTime();
         
     //     // Decrement wait time for all processes
-    //     foreach (Process process in Processes) 
+    //     foreach (Process process in processes) 
     //     {
     //         process.IncWaitTime();
     //     }
     // }
+
+    public void UpdateProcesses()
+    {   
+        // Update timeText text
+        timeText.text = time.ToString();
+
+        // Get running process from chosen scheduling policy
+        runningProcess = schedulingPolicy.GetRunningProcess(processes);
+
+        if (runningProcess != null)
+        {
+
+            if (runningProcess != prevRunningProcess) 
+            {   
+                if (prevRunningProcess != null && prevRunningProcess.status != Status.Terminated) // Second part might not be necessary if delete lahos ang terminated
+                    prevRunningProcess.SetStatus(Status.Ready);
+                
+                runningProcess.SetStatus(Status.Running);
+                prevRunningProcess = runningProcess;
+            }            
+            
+            runningProcess.DecBurstTime();
+              
+        }
+
+        Process processToDestroy = null;
+
+        foreach (Process process in processes) 
+        {
+            process.DecWaitTime();  // Decrement wait time for all processes
+            process.UpdateStatus(); // Update status of all process
+            process.UpdateAttributes();
+            
+            
+            // Create new reference to terminated process since cant be done while iterating
+            // Works since there is only one or no processes that will terminated at a time
+            if (process.status == Status.Terminated) {
+                processToDestroy = process;
+            }    
+
+        }
+
+        // Remove terminated process if there is one
+        if (processToDestroy != null)
+        {
+            processes.Remove(processToDestroy);
+            Destroy(processToDestroy.objReference);
+        }
+            
+
+    }
         
     public void Pause()
     {
@@ -122,34 +198,48 @@ public class ProcessManager : MonoBehaviour
         
     public void Stop()
     {
-        // Decrement wait time for all processes
-        foreach (Process process in Processes) 
+        List<Process> processesToRemove = new List<Process>(processes); // Create a copy of the list
+
+        foreach (Process process in processesToRemove)
         {
-            process.SetStatus(Status.Terminated)
+            processes.Remove(process); // Remove the process from the original list
+            Destroy(process.objReference); // Destroy the associated GameObject
         }
+
+        processes.Clear();
+        processCount = 0;
+        time = 0;
+        timeText.text = time.ToString();
+
+        isPlaying = false;
     }
         
-    public void AddProcess()
+    public void AddProcess(bool isFromNext)
     {
-        // Instantiate a new process with ProcessCount as its ID and a default time
-        Process newProcess = new Process(ProcessCount, defaultProcessTime);
+        // Instantiate a new process with processCount as its ID and a default time
+        // Process newProcess = new Process(processCount, defaultProcessTime);
         
-        // Add the new process to the Processes list
-        Processes.Add(newProcess);
+        // Add the new process to the processes list
 
-        GameObject process = Object.Instantiate(ProcessPrefabs);
-        // Sets "ProcessHolder" as the new parent of the process GameObject.
-        process.transform.SetParent(ProcessHolder); // Set position relative to parent
-        // process.transform.SetParent(ProcessHolder, false); // Set position in global orientation
+        GameObject newProcess = Object.Instantiate(processPrefab, processesContainer.transform);
+        
+        // Sets "processHolder" as the new parent of the process GameObject.
+        newProcess.transform.SetParent(processesContainer.transform); // Set position relative to parent
+        // process.transform.SetParent(processHolder.transform, false); // Set position in global orientation
 
-        // If components not set in prefab
-        process.AddComponent<Process>();
-        newProcess.idText = 
+        Process process = newProcess.GetComponent<Process>();
+        processes.Add(process);
+        process.InitAttributes(newProcess, ++processCount, ++time);
+        process.UpdateAttributes();
+
+        if (!isFromNext)
+            UpdateProcesses();
+    
     }
     
     // private void Randomize(int min, int max) {
     //     return Randomizer.i.Randomize(min, max + 1); // Include min and max
     // }
     
-    private Inc
+    // private Inc
 }
