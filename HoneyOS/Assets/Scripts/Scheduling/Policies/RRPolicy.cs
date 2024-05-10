@@ -21,27 +21,31 @@ public class RRPolicy : Policy
             if (process.status == Status.Ready && !processQueue.Contains(process)) 
             // && !queuedProcesses.Contains(process))
             {
+                Debug.Log("Processes Added: ");
+                Debug.Log("Process ID: " + process.id);
                 processQueue.Add(process);
                 // queuedProcesses.Add(process);
             }
         }
 
-        foreach (Process proc in processQueue){
-            Debug.Log("process: " + proc);
-        }
+        // foreach (Process proc in processQueue){
+        //     Debug.Log("process: " + proc);
+        // }
 
         if (processQueue.Count == 0)
             return null;
         
         //Gets the next process
         Process currentProcess = processQueue.First();
+        Debug.Log("Running: " + currentProcess.id);
         currentProcess.DecQuantumTime();
-        Debug.Log("quantume time: " + currentProcess.quantumTime);
+        Debug.Log("quantumTime: " + currentProcess.quantumTime);
 
         //Check if the quantum time is 0
         if (currentProcess.quantumTime <= 0 || currentProcess.burstTime <= 0){
             processQueue.RemoveAt(0);
-            processQueue.Add(currentProcess);
+            if(currentProcess.burstTime > 1)
+                processQueue.Add(currentProcess);
         }
         
         return currentProcess;
