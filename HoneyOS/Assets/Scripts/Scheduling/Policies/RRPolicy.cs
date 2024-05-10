@@ -26,6 +26,10 @@ public class RRPolicy : Policy
             }
         }
 
+        foreach (Process proc in processQueue){
+            Debug.Log("process: " + proc);
+        }
+
         if (processQueue.Count == 0)
             return null;
         
