@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Process : MonoBehaviour
 {   
+    private ProcessManager processManager;
+
     public TMP_Text idText;
     public TMP_Text priorityText;
     public TMP_Text arrivalTimeText;
@@ -18,6 +20,7 @@ public class Process : MonoBehaviour
     private int arrivalTime;
     public int burstTime { get; private set; }
     private int memorySize;
+    private int dataSegment; { get; private set; }
     public Status status { get; private set; }
     private float waitTime;
     public int quantumTime {get; private set;}
@@ -32,6 +35,10 @@ public class Process : MonoBehaviour
         this.arrivalTime = arrivalTime;
         priority = Random.Range(1,101); // Generate a number from 1 to 100
         burstTime = Random.Range(1,10);
+
+        // Randomize each segment instead of memory size
+        // memorySize = sum of all segments
+
         memorySize = Random.Range(1,1000);
         SetStatus(Status.New);
         waitTime = Random.Range(0,10);
@@ -64,7 +71,12 @@ public class Process : MonoBehaviour
         if (status != Status.Terminated)
         {
             if (waitTime > 0) SetStatus(Status.Waiting);
-            else if (waitTime <= 0 && !IsStatus(Status.Running)) SetStatus(Status.Ready);
+            else if (waitTime <= 0 && !IsStatus(Status.Running) && processManager.HasMemory()) 
+            {
+                SetStatus(Status.Ready);
+                processManager.AddInReadyQueue(this);
+            }
+
             else if (burstTime <= 0) SetStatus(Status.Terminated);
         }
 

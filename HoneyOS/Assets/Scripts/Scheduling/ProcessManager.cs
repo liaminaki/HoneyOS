@@ -8,6 +8,10 @@ public class ProcessManager : MonoBehaviour
 {
     private int processCount;
     private List<Process> processes; 
+    private List<Process> readyQueue;
+    private List<Process> jobQueue;
+
+
     private Process runningProcess;
     private Process prevRunningProcess;
     private bool isPlaying;
@@ -146,8 +150,10 @@ public class ProcessManager : MonoBehaviour
         timeText.text = time.ToString();
 
         // Get running process from chosen scheduling policy
-        runningProcess = schedulingPolicy.GetRunningProcess(processes);
+        runningProcess = schedulingPolicy.GetRunningProcess(readyQueue);
+        
 
+        // If running process is different and previous running is not yet terminated
         if (runningProcess != null)
         {
 
@@ -236,7 +242,17 @@ public class ProcessManager : MonoBehaviour
             UpdateProcesses();
     
     }
-    
+
+    public void AddInReadyQueue (Process process) {
+        // Check if not already in Queue
+        if (!readyQueue.Contains(process))
+            readyQueue.Add(process);
+    }
+
+    public void HasMemory(Process process) {
+        // Add implementation
+    }
+
     // private void Randomize(int min, int max) {
     //     return Randomizer.i.Randomize(min, max + 1); // Include min and max
     // }
