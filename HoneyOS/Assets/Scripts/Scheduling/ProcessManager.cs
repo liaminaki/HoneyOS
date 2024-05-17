@@ -7,7 +7,8 @@ using TMPro;
 public class ProcessManager : MonoBehaviour
 {
     private int processCount;
-    private List<Process> processes; 
+    private List<Process> processes;
+    private List<Process> readyQueue;
     private Process runningProcess;
     private Process prevRunningProcess;
     private bool isPlaying;
@@ -25,6 +26,7 @@ public class ProcessManager : MonoBehaviour
     void Awake() {
         processCount = 0;
         processes = new List<Process>();
+        readyQueue = new List<Process>();
         isPlaying = false;
         time = 0;
         prevRunningProcess = null;
@@ -146,7 +148,7 @@ public class ProcessManager : MonoBehaviour
         timeText.text = time.ToString();
 
         // Get running process from chosen scheduling policy
-        runningProcess = schedulingPolicy.GetRunningProcess(processes);
+        runningProcess = schedulingPolicy.GetRunningProcess(readyQueue);
 
         if (runningProcess != null)
         {
@@ -175,6 +177,15 @@ public class ProcessManager : MonoBehaviour
             
             // Create new reference to terminated process since cant be done while iterating
             // Works since there is only one or no processes that will terminated at a time
+
+            if (process.status == Status.Ready) {
+                
+                if (!readyQueue.Contains(process))
+                    readyQueue.Add(process);
+
+            }
+
+
             if (process.status == Status.Terminated) {
                 processToDestroy = process;
             }    
@@ -185,6 +196,7 @@ public class ProcessManager : MonoBehaviour
         if (processToDestroy != null)
         {
             processes.Remove(processToDestroy);
+            readyQueue.Remove(processToDestroy);
             Destroy(processToDestroy.objReference);
         }
             
