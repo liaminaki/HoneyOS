@@ -17,7 +17,7 @@ public class Process : MonoBehaviour
     public int priority { get; private set; }
     private int arrivalTime;
     public int burstTime { get; private set; }
-    private int memorySize;
+    public int memorySize { get; private set; }
     public Status status { get; private set; }
     private float waitTime;
     public int quantumTime {get; private set;}
