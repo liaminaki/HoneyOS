@@ -16,7 +16,8 @@ public class ProcessManager : MonoBehaviour
     private Policy schedulingPolicy;
     private int time;
 
-    private Memory memory;
+    // private Memory memory;
+    public Memory memory { get; private set; }
 
     public GameObject processesContainer;
     public GameObject processPrefab;
@@ -186,7 +187,8 @@ public class ProcessManager : MonoBehaviour
                 if (!readyQueue.Contains(process))
                 {
                     readyQueue.Add(process);
-                    memory.AllocateMemory(process);
+                    // memory.HasMemory(process);
+                    // memory.AllocateMemory(process);
                 }
 
             }
@@ -200,7 +202,8 @@ public class ProcessManager : MonoBehaviour
         // Remove terminated process if there is one
         if (processToDestroy != null)
         {
-            memory.DeallocateMemory(processToDestroy);
+            processToDestroy.DeallocateMemory();
+            // memory.DeallocateMemory(processToDestroy);
             processes.Remove(processToDestroy);
             readyQueue.Remove(processToDestroy);
             Destroy(processToDestroy.objReference);

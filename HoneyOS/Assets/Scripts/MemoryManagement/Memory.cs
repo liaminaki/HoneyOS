@@ -11,12 +11,35 @@ public class Memory : MonoBehaviour
     int minSpaceBaseAdr;
 
     public static Memory Instance { get; private set; }
-    private MemSegmentsManager memSegment;
+    public SegmentManager segmentManager;
 
     void Awake() 
     {
-        Instance = this;
         SegmentTable = new List<Segment>();
+        
+        // Ensure only one instance of Memory exists
+        if (Instance == null)
+        {
+            Instance = this;
+            
+
+            // Optionally, make this object persistent across scenes
+            // DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            // Destroy the duplicate instance
+            Destroy(gameObject);
+        }
+    }
+
+    // Optionally, handle cleanup on destroy
+    void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
     
     // Check if there is enough memory for the process and allocate
@@ -57,6 +80,8 @@ public class Memory : MonoBehaviour
 
             if (process.memorySize <= minSpace) {
                 
+                AllocateMemory(process);
+
                 // AddInSegmentTable(minSpaceBaseAdr, process.memorySize);
                 return true;
             }
@@ -69,6 +94,7 @@ public class Memory : MonoBehaviour
             if (process.memorySize <= (MAX - MIN)) {
                 
                 // Add segment table 
+                AllocateMemory(process);
                 
                 // AddInSegmentTable(MIN, process.memorySize);
                 return true;
@@ -81,18 +107,24 @@ public class Memory : MonoBehaviour
     // Use HasMemory() before using AllocateMemory() to check for memory before allocating directly
     public void AllocateMemory(Process process)
     {   
-        SegmentTable.Add(new Segment(minSpaceBaseAdr, process.memorySize, process));
+
+        Segment newSegment = new Segment(minSpaceBaseAdr, process.memorySize, process);
+        SegmentTable.Add(newSegment);
         
         // Add in visualization implementation
-        // memSegment.AddSegments(process.memorySize, minSpaceBaseAdr);
+        segmentManager.AddSegment(newSegment); 
 
         // Sort the table in ascending order based on the Base attribute
         SegmentTable.Sort((x, y) => x.baseAdr.CompareTo(y.baseAdr));
+
+        Debug.Log("In memory.AllocateMemory(Process process)");
         
     }
 
     public void DeallocateMemory(Process process)
     {
+        Debug.Log("baka");
+        Debug.Log("processID: " + process.id);
         foreach (Segment segment in SegmentTable)
         {
             if (segment.process == process)
@@ -100,6 +132,7 @@ public class Memory : MonoBehaviour
                 SegmentTable.Remove(segment);
 
                 // Remove in visualization implementation
+                segmentManager.DeleteSegment(segment);
             }
                 
         }
