@@ -8,24 +8,30 @@ public class Memory : MonoBehaviour
     private const int MAX = 1024;
     private List<Segment> SegmentTable;
 
+    int minSpaceBaseAdr;
+
+    public static Memory Instance { get; private set; }
+
     void Awake() 
     {
+        Instance = this;
         SegmentTable = new List<Segment>();
     }
     
     // Check if there is enough memory for the process and allocate
-    public bool AllocateMemory(Process process) 
+    public bool HasMemory(Process process) 
     {   
         // Assuming Segment Table is sorted based on ascending value of baseAdr
 
+        minSpaceBaseAdr = MIN;
+    
         if (SegmentTable.Count > 0)
         {   
             int space;
 
             // Get space before first segment 
             int minSpace = SegmentTable[0].baseAdr - MIN;
-            int minSpaceBaseAdr = MIN;   
-                
+               
             // Get smallest space
             for(int i = 1; i < SegmentTable.Count; i++) 
             {
@@ -50,7 +56,7 @@ public class Memory : MonoBehaviour
 
             if (process.memorySize <= minSpace) {
                 
-                AddInSegmentTable(minSpaceBaseAdr, process.memorySize);
+                // AddInSegmentTable(minSpaceBaseAdr, process.memorySize);
                 return true;
             }
 
@@ -63,7 +69,7 @@ public class Memory : MonoBehaviour
                 
                 // Add segment table 
                 
-                AddInSegmentTable(MIN, process.memorySize);
+                // AddInSegmentTable(MIN, process.memorySize);
                 return true;
             }
         }
@@ -71,15 +77,31 @@ public class Memory : MonoBehaviour
         return false;
 
     }
+    // Use HasMemory() before using AllocateMemory() to check for memory before allocating directly
+    public void AllocateMemory(Process process)
+    {   
+        SegmentTable.Add(new Segment(minSpaceBaseAdr, process.memorySize, process));
+        
+        // Add in visualization implementation
 
-    private void AddInSegmentTable(int baseAdr, int limit) {
-        
-        SegmentTable.Add(new Segment(baseAdr , limit));
-        
-        // Sort the table in ascending orde based on the Base attribute
+        // Sort the table in ascending order based on the Base attribute
         SegmentTable.Sort((x, y) => x.baseAdr.CompareTo(y.baseAdr));
-
+        
     }
 
+    public void DeallocateMemory(Process process)
+    {
+        foreach (Segment segment in SegmentTable)
+        {
+            if (segment.process == process)
+            {
+                SegmentTable.Remove(segment);
+
+                // Remove in visualization implementation
+            }
+                
+        }
+
+    }
 
 }
