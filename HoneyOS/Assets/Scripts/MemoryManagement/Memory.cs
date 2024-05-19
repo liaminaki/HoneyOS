@@ -11,6 +11,7 @@ public class Memory : MonoBehaviour
     int minSpaceBaseAdr;
 
     public static Memory Instance { get; private set; }
+    private MemSegmentsManager memSegment;
 
     void Awake() 
     {
@@ -83,6 +84,7 @@ public class Memory : MonoBehaviour
         SegmentTable.Add(new Segment(minSpaceBaseAdr, process.memorySize, process));
         
         // Add in visualization implementation
+        // memSegment.AddSegments(process.memorySize, minSpaceBaseAdr);
 
         // Sort the table in ascending order based on the Base attribute
         SegmentTable.Sort((x, y) => x.baseAdr.CompareTo(y.baseAdr));
