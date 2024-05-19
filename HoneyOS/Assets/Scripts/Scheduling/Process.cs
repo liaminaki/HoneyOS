@@ -34,7 +34,7 @@ public class Process : MonoBehaviour
         this.arrivalTime = arrivalTime;
         priority = Random.Range(1,101); // Generate a number from 1 to 100
         burstTime = Random.Range(1,10);
-        memorySize = Random.Range(1,1000);
+        memorySize = Random.Range(64,128);
         SetStatus(Status.New);
         waitTime = Random.Range(0,10);
         quantumTime = 4;
@@ -43,6 +43,7 @@ public class Process : MonoBehaviour
     void Awake()
     {
         memory = Memory.Instance;
+        // memory
     }
   
     public void UpdateAttributes() 
@@ -78,7 +79,7 @@ public class Process : MonoBehaviour
             
             // If waiting or there is not enough memory
             // !IsStatus(Status.Ready) ensures that we do not go back to waiting once a process is ready
-            else if (waitTime >= 0 && !IsStatus(Status.Ready)) 
+            else if (waitTime >= 0 && !IsStatus(Status.Ready) && !IsStatus(Status.Running)) 
                 SetStatus(Status.Waiting);
            
             else if (burstTime == 0) 
@@ -115,6 +116,9 @@ public class Process : MonoBehaviour
     //     return new Random().Next(min, max);
     // }
 
+    public void DeallocateMemory() {
+        memory.DeallocateMemory(this);
+    }
 }
 
 public enum Status { New, Ready, Waiting, Running, Terminated}
