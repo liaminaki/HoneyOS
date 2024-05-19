@@ -18,11 +18,11 @@ public class RRPolicy : Policy
         
         foreach (Process process in processList)
         {
-            if (process.status == Status.Ready && !processQueue.Contains(process)) 
+            if (!processQueue.Contains(process)) 
             // && !queuedProcesses.Contains(process))
             {
-                Debug.Log("Processes Added: ");
-                Debug.Log("Process ID: " + process.id);
+                // Debug.Log("Processes Added: ");
+                // Debug.Log("Process ID: " + process.id);
                 processQueue.Add(process);
                 // queuedProcesses.Add(process);
             }
@@ -37,9 +37,9 @@ public class RRPolicy : Policy
         
         //Gets the next process
         Process currentProcess = processQueue.First();
-        Debug.Log("Running: " + currentProcess.id);
+        // Debug.Log("Running: " + currentProcess.id);
         currentProcess.DecQuantumTime();
-        Debug.Log("quantumTime: " + currentProcess.quantumTime);
+        // Debug.Log("quantumTime: " + currentProcess.quantumTime);
 
         //Check if the quantum time is 0
         if (currentProcess.quantumTime <= 0 || currentProcess.burstTime <= 0){
