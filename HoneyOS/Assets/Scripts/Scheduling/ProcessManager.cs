@@ -16,6 +16,8 @@ public class ProcessManager : MonoBehaviour
     private Policy schedulingPolicy;
     private int time;
 
+    private Memory memory;
+
     public GameObject processesContainer;
     public GameObject processPrefab;
 
@@ -29,9 +31,11 @@ public class ProcessManager : MonoBehaviour
         readyQueue = new List<Process>();
         isPlaying = false;
         time = 0;
+        memory = Memory.Instance;
         prevRunningProcess = null;
         timeText.text = time.ToString();
         // SetSchedulingPolicy(SchedPolicy.FCFS);
+        
 
     }
 
@@ -174,19 +178,20 @@ public class ProcessManager : MonoBehaviour
             process.UpdateStatus(); // Update status of all process
             process.UpdateAttributes();
             
-            
             // Create new reference to terminated process since cant be done while iterating
             // Works since there is only one or no processes that will terminated at a time
 
             if (process.status == Status.Ready) {
                 
                 if (!readyQueue.Contains(process))
+                {
                     readyQueue.Add(process);
+                    memory.AllocateMemory(process.memorySize);
+                }
 
             }
 
-
-            if (process.status == Status.Terminated) {
+            else if (process.status == Status.Terminated) {
                 processToDestroy = process;
             }    
 

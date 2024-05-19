@@ -13,13 +13,15 @@ public class Process : MonoBehaviour
     public TMP_Text memorySizeText;
     public TMP_Text statusText;
 
+    private Memory memory;
+
     public int id { get; private set; }
     public int priority { get; private set; }
     private int arrivalTime;
     public int burstTime { get; private set; }
     public int memorySize { get; private set; }
     public Status status { get; private set; }
-    private float waitTime;
+    public int waitTime {get; private set; }
     public int quantumTime {get; private set;}
     public GameObject objReference { get; private set; }
 
@@ -38,11 +40,10 @@ public class Process : MonoBehaviour
         quantumTime = 4;
     }
 
-    // void Awake()
-    // {
-        
-
-    // }
+    void Awake()
+    {
+        memory = Memory.Instance;
+    }
   
     public void UpdateAttributes() 
     {
@@ -53,7 +54,13 @@ public class Process : MonoBehaviour
         memorySizeText.text = memorySize.ToString();
         
         if (IsStatus(Status.Waiting))
-            statusText.text = status.ToString() + "(" + waitTime + ")";
+        {   
+            if (waitTime > 0)
+                statusText.text = status.ToString() + "(" + waitTime + ")";
+            else
+                statusText.text = "Waiting for memory";
+        }
+            
         else
             statusText.text = status.ToString();
 
@@ -62,10 +69,20 @@ public class Process : MonoBehaviour
     public void UpdateStatus()
     {   
         if (status != Status.Terminated)
-        {
-            if (waitTime > 0) SetStatus(Status.Waiting);
-            else if (waitTime <= 0 && !IsStatus(Status.Running)) SetStatus(Status.Ready);
-            else if (burstTime <= 0) SetStatus(Status.Terminated);
+        {   
+            // Set status to ready if waitTime == 0 and there is enough memory (one-time on first setting status to ready)
+            // !IsStatus(Status.Ready) ensures that we do not repeat checking if there is enough memory and set status again
+            // Switching from running to ready is handled in ProcessManager.UpdateProcessses()
+            if (waitTime == 0 && !IsStatus(Status.Ready) && !IsStatus(Status.Running) && memory.HasMemory(this)) 
+                SetStatus(Status.Ready);
+            
+            // If waiting or there is not enough memory
+            // !IsStatus(Status.Ready) ensures that we do not go back to waiting once a process is ready
+            else if (waitTime >= 0 && !IsStatus(Status.Ready)) 
+                SetStatus(Status.Waiting);
+           
+            else if (burstTime == 0) 
+                SetStatus(Status.Terminated); 
         }
 
         // Change to Status.Running in ProcessManager
@@ -80,9 +97,9 @@ public class Process : MonoBehaviour
 
     private bool IsStatus(Status toCheckStatus) { return status == toCheckStatus; }
 
-    public void DecBurstTime()	{ burstTime--; }
+    public void DecBurstTime()	{ if (burstTime != 0) burstTime--; }
     public void IncBurstTime()	{ burstTime++; }
-    public void DecWaitTime() 	{ waitTime--; }
+    public void DecWaitTime() 	{ if (waitTime != 0) waitTime--; }
     public void IncWaitTime()   { waitTime++; }
     public void DecQuantumTime() {
         if (quantumTime == 0 || burstTime == 0){
