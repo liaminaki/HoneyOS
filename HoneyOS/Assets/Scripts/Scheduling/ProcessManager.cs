@@ -186,7 +186,7 @@ public class ProcessManager : MonoBehaviour
                 if (!readyQueue.Contains(process))
                 {
                     readyQueue.Add(process);
-                    memory.AllocateMemory(process.memorySize);
+                    memory.AllocateMemory(process);
                 }
 
             }
@@ -200,6 +200,7 @@ public class ProcessManager : MonoBehaviour
         // Remove terminated process if there is one
         if (processToDestroy != null)
         {
+            memory.DeallocateMemory(processToDestroy);
             processes.Remove(processToDestroy);
             readyQueue.Remove(processToDestroy);
             Destroy(processToDestroy.objReference);

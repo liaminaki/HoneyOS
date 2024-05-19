@@ -78,16 +78,30 @@ public class Memory : MonoBehaviour
 
     }
     // Use HasMemory() before using AllocateMemory() to check for memory before allocating directly
-    public void AllocateMemory(int size)
+    public void AllocateMemory(Process process)
     {   
-        SegmentTable.Add(new Segment(minSpaceBaseAdr, size));
+        SegmentTable.Add(new Segment(minSpaceBaseAdr, process.memorySize, process));
         
-        // Add in visualization
+        // Add in visualization implementation
 
         // Sort the table in ascending order based on the Base attribute
         SegmentTable.Sort((x, y) => x.baseAdr.CompareTo(y.baseAdr));
         
     }
 
+    public void DeallocateMemory(Process process)
+    {
+        foreach (Segment segment in SegmentTable)
+        {
+            if (segment.process == process)
+            {
+                SegmentTable.Remove(segment);
+
+                // Remove in visualization implementation
+            }
+                
+        }
+
+    }
 
 }
