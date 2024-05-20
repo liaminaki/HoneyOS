@@ -188,7 +188,7 @@ public class ProcessManager : MonoBehaviour
                 {
                     readyQueue.Add(process);
                     // memory.HasMemory(process);
-                    // memory.AllocateMemory(process);
+                    memory.AllocateMemory(process);
                 }
 
             }

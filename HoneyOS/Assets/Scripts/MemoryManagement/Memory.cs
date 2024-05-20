@@ -24,7 +24,7 @@ public class Memory : MonoBehaviour
             
 
             // Optionally, make this object persistent across scenes
-            // DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
         }
         else if (Instance != this)
         {
@@ -47,40 +47,45 @@ public class Memory : MonoBehaviour
     {   
         // Assuming Segment Table is sorted based on ascending value of baseAdr
 
-        minSpaceBaseAdr = MIN;
+        int minSpace = MAX + 1; // Set to max + 1 to ensure any valid space found will be smaller
+        minSpaceBaseAdr = -1; // Initialize to an invalid address
     
         if (SegmentTable.Count > 0)
         {   
-            int space;
-
-            // Get space before first segment 
-            int minSpace = SegmentTable[0].baseAdr - MIN;
-               
-            // Get smallest space
-            for(int i = 1; i < SegmentTable.Count; i++) 
+            // Iterate through the SegmentTable to find the minimum space
+            for (int i = 0; i <= SegmentTable.Count; i++)
             {
-                // Check for space between two segments
-                space = SegmentTable[i].baseAdr - SegmentTable[i - 1].endAdr;
+                // Calculate space before the current segment or after the last segment
+                int space;
 
-                if (space >= process.memorySize  && space < minSpace)
+                // Get space before first segment 
+                if (i == 0)
+                    space = SegmentTable[i].baseAdr - MIN;
+
+                // Check space after the last segment
+                else if (i == SegmentTable.Count)
+                    space = MAX - SegmentTable[i - 1].endAdr;
+
+                // Check space betweent two segments
+                else
+                    space = SegmentTable[i].baseAdr - SegmentTable[i - 1].endAdr;
+                
+                // Check for best fit
+                // Check if the space is sufficient for the process and smaller than minSpace
+                if (space >= process.memorySize && space < minSpace)
                 {
                     minSpace = space;
-                    minSpaceBaseAdr = SegmentTable[i - 1].endAdr;
+                    // Set minSpaceBaseAdr based on the position of the current segment
+                    if (i == 0)
+                        minSpaceBaseAdr = MIN;
+                    else
+                        minSpaceBaseAdr = SegmentTable[i - 1].endAdr;
                 }
             }
 
-            // Check space after the last segment
-            space = MAX - (SegmentTable[SegmentTable.Count - 1].endAdr);
-            
-            if (space >= process.memorySize  && space < minSpace)
-            {
-                minSpace = space;
-                minSpaceBaseAdr = SegmentTable[SegmentTable.Count - 1].endAdr;
-            }
-
-            if (process.memorySize <= minSpace) {
+            if (minSpaceBaseAdr != -1) {
                 
-                AllocateMemory(process);
+                // AllocateMemory(process);
 
                 // AddInSegmentTable(minSpaceBaseAdr, process.memorySize);
                 return true;
@@ -94,7 +99,7 @@ public class Memory : MonoBehaviour
             if (process.memorySize <= (MAX - MIN)) {
                 
                 // Add segment table 
-                AllocateMemory(process);
+                // AllocateMemory(process);
                 
                 // AddInSegmentTable(MIN, process.memorySize);
                 return true;
