@@ -24,7 +24,7 @@ public class Memory : MonoBehaviour
             
 
             // Optionally, make this object persistent across scenes
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else if (Instance != this)
         {
