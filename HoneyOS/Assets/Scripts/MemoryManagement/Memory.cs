@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Memory : MonoBehaviour
 {
     private const int MIN = 0;
     private const int MAX = 1024;
+
+    public int usedMemory { get; set; }
+    public TMP_Text usedMemoryText; 
+
     private List<Segment> SegmentTable;
 
     int minSpaceBaseAdr;
@@ -16,6 +21,7 @@ public class Memory : MonoBehaviour
     void Awake() 
     {
         SegmentTable = new List<Segment>();
+        usedMemory = 0;
         
         // Ensure only one instance of Memory exists
         if (Instance == null)
@@ -117,7 +123,12 @@ public class Memory : MonoBehaviour
         SegmentTable.Add(newSegment);
         
         // Add in visualization implementation
-        segmentManager.AddSegment(newSegment); 
+        segmentManager.AddSegment(newSegment);
+        
+        // Trace the allocated memory
+        usedMemory += process.memorySize;
+
+        UpdateUsedMemory();
 
         // Sort the table in ascending order based on the Base attribute
         SegmentTable.Sort((x, y) => x.baseAdr.CompareTo(y.baseAdr));
@@ -128,20 +139,49 @@ public class Memory : MonoBehaviour
 
     public void DeallocateMemory(Process process)
     {
-        Debug.Log("baka");
-        Debug.Log("processID: " + process.id);
-        foreach (Segment segment in SegmentTable)
+        Debug.Log("Deallocating memory for process with ID: " + process.id);
+        
+        // Iterate backwards through the SegmentTable
+        for (int i = SegmentTable.Count - 1; i >= 0; i--)
         {
+            Segment segment = SegmentTable[i];
+            
+            // Check if the segment's process matches the given process
             if (segment.process == process)
             {
-                SegmentTable.Remove(segment);
+                // Remove the segment from the SegmentTable
+                SegmentTable.RemoveAt(i);
+
+                // Trace the deallocated memory
+                usedMemory -= process.memorySize;
 
                 // Remove in visualization implementation
                 segmentManager.DeleteSegment(segment);
             }
-                
         }
 
+        UpdateUsedMemory();
+    }
+
+    public void Reset()
+    {   
+        Debug.Log("Reset memory");
+
+        // Delete all segments in visualization implementation
+        foreach (Segment segment in SegmentTable)
+        {
+            segmentManager.DeleteSegment(segment);
+        }
+
+        // Remove all segments from the SegmentTable
+        SegmentTable.Clear();
+
+        UpdateUsedMemory();
+    }
+
+    public void UpdateUsedMemory()
+    {
+        usedMemoryText.text = usedMemory.ToString() + " MB of 1024 MB Used";
     }
 
 }

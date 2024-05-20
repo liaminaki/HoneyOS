@@ -202,8 +202,7 @@ public class ProcessManager : MonoBehaviour
         // Remove terminated process if there is one
         if (processToDestroy != null)
         {
-            processToDestroy.DeallocateMemory();
-            // memory.DeallocateMemory(processToDestroy);
+            memory.DeallocateMemory(processToDestroy);
             processes.Remove(processToDestroy);
             readyQueue.Remove(processToDestroy);
             Destroy(processToDestroy.objReference);
@@ -231,6 +230,8 @@ public class ProcessManager : MonoBehaviour
         processCount = 0;
         time = 0;
         timeText.text = time.ToString();
+
+        memory.Reset();
 
         isPlaying = false;
     }

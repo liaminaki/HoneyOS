@@ -116,9 +116,6 @@ public class Process : MonoBehaviour
     //     return new Random().Next(min, max);
     // }
 
-    public void DeallocateMemory() {
-        memory.DeallocateMemory(this);
-    }
 }
 
 public enum Status { New, Ready, Waiting, Running, Terminated}
