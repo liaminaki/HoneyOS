@@ -176,6 +176,8 @@ public class Memory : MonoBehaviour
         // Remove all segments from the SegmentTable
         SegmentTable.Clear();
 
+        usedMemory = 0;
+
         UpdateUsedMemory();
     }
 
