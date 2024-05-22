@@ -22,9 +22,6 @@ public class SegmentManager : MonoBehaviour
 
             GameObject newSegment = Object.Instantiate(memSegmentPrefab, memoryFrame.transform);
 
-            // Print out the children of newSegment
-            Debug.Log("child: " + newSegment.transform);
-
             segment.SetObjectRef(newSegment);
 
             TextMeshProUGUI segmentIDComponent = FindTextMeshProComponent(newSegment.transform);
@@ -72,12 +69,9 @@ public class SegmentManager : MonoBehaviour
             return tmPro;
         }
 
-        Debug.Log("parentTransform: " + parentTransform);
-
         // If not, recursively search the children
         foreach (Transform child in parentTransform)
         {
-            Debug.Log("parentTransform child: " + child);
             TextMeshProUGUI result = FindTextMeshProComponent(child)    ;
             if (result != null)
             {
