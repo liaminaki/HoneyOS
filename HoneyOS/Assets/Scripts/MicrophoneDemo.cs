@@ -28,6 +28,8 @@ namespace Whisper.Samples
         public DesktopManager desktopManager;
         public TextEditorController textEditor;
         public PageController help;
+        public ProcessManager processManager;
+        public PageController2 scheduler;
 
         [Header("UI")] 
         public Button button;
@@ -89,7 +91,7 @@ namespace Whisper.Samples
             {
                 { "open sweet", ( () => desktopManager.OpenApp(0), "Opening Sweet") },
                 // { "open file manager", ( () => desktopManager.OpenApp(1), "Opening File Manager") },
-                { "open sugar", ( () => desktopManager.OpenApp(1), "Opening Sugar") },
+                { "open sugar", ( () => desktopManager.OpenApp(2), "Opening Sugar") },
                 { "close application", ( () => desktopManager.CloseCurrentApp(), "Closing app") },
                 { "close all", ( () => desktopManager.CloseAllApps(), "Closing all app") },
                 { "minimize application", ( () => desktopManager.MinCurrentApp() ,"Minimizing app") },
@@ -107,6 +109,18 @@ namespace Whisper.Samples
                 { "open application guide", ( () => help.OpenAppGuide(), "Opening Application Guide") },
                 { "open about us", ( () => help.OpenAboutUs(), "Opening About Us") },
                 // Add more commands and their corresponding functions and messages as needed
+                { "open cake", ( () => desktopManager.OpenApp(1), "Opening Cake") },
+                { "start cake", ( () => scheduler.OpenSelectionPage(), "Opening Policy selector") },
+                { "back to policy selection", ( () => {scheduler.OpenSelectionPage(); processManager.Stop();}, "Opening Policy selector") },
+                { "choose first come first serve", ( () => {scheduler.OpenSimPage(); processManager.SetSchedulingPolicy("FCFS");}, "FCFS Simulator") },
+                { "choose priority", ( () => {scheduler.OpenSimPage(); processManager.SetSchedulingPolicy("Prio");}, "Priority Simulator") },
+                { "choose round robin", ( () => {scheduler.OpenSimPage(); processManager.SetSchedulingPolicy("RR");}, "Round Robin Simulator") },
+                { "choose shortest job first", ( () => {scheduler.OpenSimPage(); processManager.SetSchedulingPolicy("SJF");}, "Shortest Job First Simulator") },
+                { "play simulation", ( () => processManager.Play(), "Starting simulation") },
+                { "pause", ( () => processManager.Pause(), "Pausing simulation") },
+                { "add process", ( () => processManager.AddProcess(false), "Adding Process") },
+                { "stop simulation", ( () => processManager.Stop(), "Stoping simulation") },
+                { "next", ( () => processManager.Next(), "Next") },
             };
         }
 
