@@ -22,16 +22,20 @@ public class SegmentManager : MonoBehaviour
 
             GameObject newSegment = Object.Instantiate(memSegmentPrefab, memoryFrame.transform);
 
+            // Print out the children of newSegment
+            Debug.Log("child: " + newSegment.transform);
+
             segment.SetObjectRef(newSegment);
 
-            Transform tmProGameObject = newSegment.transform.Find ("SegmentID");
-
-            if (tmProGameObject != null){
-                TextMeshPro segmentIDComponent = tmProGameObject.GetComponent<TextMeshPro>();
-                if (segmentIDComponent != null){
-                    string id = segment.process.id.ToString();
-                    segmentIDComponent.text = id;
-                }
+            TextMeshProUGUI segmentIDComponent = FindTextMeshProComponent(newSegment.transform);
+            if (segmentIDComponent != null)
+            {
+                string id = segment.process.id.ToString();
+                segmentIDComponent.text = id;
+            }
+            else
+            {
+                Debug.LogError("TextMeshPro component not found.");
             }
             
             RectTransform newSegmentTransform = newSegment.GetComponent<RectTransform>();
@@ -57,6 +61,32 @@ public class SegmentManager : MonoBehaviour
                 newSegmentTransform.anchoredPosition = new Vector2(newSegmentTransform.anchoredPosition.x, newBaseAdr);
             }
         }
+    }
+
+    private TextMeshProUGUI FindTextMeshProComponent(Transform parentTransform)
+    {
+        // Check if the current transform has a TextMeshPro component
+        TextMeshProUGUI tmPro = parentTransform.GetComponent<TextMeshProUGUI>();
+        if (tmPro != null)
+        {
+            return tmPro;
+        }
+
+        Debug.Log("parentTransform: " + parentTransform);
+
+        // If not, recursively search the children
+        foreach (Transform child in parentTransform)
+        {
+            Debug.Log("parentTransform child: " + child);
+            TextMeshProUGUI result = FindTextMeshProComponent(child)    ;
+            if (result != null)
+            {
+                return result;
+            }
+        }
+
+        // If no TextMeshPro component was found, return null
+        return null;
     }
 
     public void DeleteSegment (Segment segment)
