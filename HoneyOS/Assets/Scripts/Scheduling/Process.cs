@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Process : MonoBehaviour
 {   
-    public GameObject prefab { get; set; }
     public TMP_Text idText;
     public TMP_Text priorityText;
     public TMP_Text arrivalTimeText;
@@ -25,6 +24,7 @@ public class Process : MonoBehaviour
     public int waitTime {get; private set; }
     public int quantumTime {get; private set;}
     public GameObject objReference { get; private set; }
+
 
     // Init attributes
     public void InitAttributes(GameObject objReference, int id, int arrivalTime)
@@ -118,4 +118,4 @@ public class Process : MonoBehaviour
 
 }
 
-public enum Status { Ready, Waiting, Running, Terminated}
+public enum Status { New, Ready, Waiting, Running, Terminated}

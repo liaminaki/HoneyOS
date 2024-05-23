@@ -33,7 +33,6 @@ public class ProcessManager : MonoBehaviour
         processCount = 0;
         processes = new List<Process>();
         readyQueue = new List<Process>();
-        jobQueue = new List<Process>();
         isPlaying = false;
         time = 0;
         memory = Memory.Instance;
@@ -195,10 +194,16 @@ public class ProcessManager : MonoBehaviour
                     if (jobQueue.Contains(process)) 
                     {
                         jobQueue.Remove(process);
+                        Destroy(process.objReference);
+
+                        GameObject newProcess = Object.Instantiate(processPrefab, readyContainer.transform);
 
                     }
                     
-                    // process.prefab.transform.SetParent(readyContainer.transform);
+                    else 
+                    {
+                        process.transform.SetParent(readyContainer.transform);
+                    }
                     
                     // memory.HasMemory(process);
                     memory.AllocateMemory(process);
@@ -212,14 +217,12 @@ public class ProcessManager : MonoBehaviour
                 {
                     jobQueue.Add(process);
 
-                    // process.prefab.transform.SetParent(jobContainer.transform);
-                    // GameObject newProcess = Object.Instantiate(processPrefab, jobContainer.transform);
-
+                    process.transform.SetParent(readyContainer.transform);
                     // memory.HasMemory(process);
                     // memory.AllocateMemory(process);
                 }
                 
-                // process.transform.SetParent(jobContainer.transform);
+                process.transform.SetParent(jobContainer.transform);
                 
             }
 
@@ -272,9 +275,10 @@ public class ProcessManager : MonoBehaviour
         // Process newProcess = new Process(processCount, defaultProcessTime);
         
         // Add the new process to the processes list
-        GameObject newProcess = Object.Instantiate(processPrefab, readyContainer.transform);
+
+
+        GameObject newProcess = Object.Instantiate(processPrefab);
         Process process = newProcess.GetComponent<Process>();
-        process.prefab = newProcess;
         
         // if (memory.HasMemory(process))
         // {
