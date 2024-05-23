@@ -17,7 +17,7 @@ public class Process : MonoBehaviour
     private Memory memory;
 
     public int id { get; private set; }
-    public int priority { get; private set; }
+    public int priority { get; set; }
     private int arrivalTime;
     public int burstTime { get; private set; }
     public int memorySize { get; private set; }
@@ -34,8 +34,8 @@ public class Process : MonoBehaviour
         this.id = id;
         this.arrivalTime = arrivalTime;
         priority = Random.Range(1,101); // Generate a number from 1 to 100
-        burstTime = Random.Range(1,10);
-        memorySize = Random.Range(64,128);
+        burstTime = Random.Range(1,11);
+        memorySize = Random.Range(64,129);
         // SetStatus(Status.New);
         // waitTime = Random.Range(0,10);
         waitTime = 0;

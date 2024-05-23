@@ -25,6 +25,9 @@ public class PrioPolicy : Policy
                 prioritizedJob = process;
             }
 
+            // Age processes in ready queue with interval 1
+            if (process.priority < 100) process.priority++;
+
             /*
                 Logic already handles FCFS if there are more than one of the same prioritized burst time.
                 For instance, if current most prioritized has 5 priority and the next process has also 5 priority,
