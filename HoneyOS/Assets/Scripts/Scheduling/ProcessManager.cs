@@ -191,24 +191,7 @@ public class ProcessManager : MonoBehaviour
                 {
                     readyQueue.Add(process);
 
-                    if (jobQueue.Contains(process)) 
-                    {
-                        jobQueue.Remove(process);
-                        Destroy(process.objReference);
-
-                        GameObject newProcess = Object.Instantiate(processPrefab, readyContainer.transform);
-
-                    }
-
-                    
-                    
-                    else 
-                    {
-                        process.transform.SetParent(readyContainer.transform);
-                    }
-
-                    
-                    
+                    process.transform.SetParent(readyContainer.transform);
                     // memory.HasMemory(process);
                     memory.AllocateMemory(process);
                 }
@@ -281,7 +264,7 @@ public class ProcessManager : MonoBehaviour
         // Add the new process to the processes list
 
 
-        GameObject newProcess = Object.Instantiate(processPrefab);
+        GameObject newProcess = Object.Instantiate(processPrefab, processesContainer.transform);
         Process process = newProcess.GetComponent<Process>();
         
         // if (memory.HasMemory(process))
