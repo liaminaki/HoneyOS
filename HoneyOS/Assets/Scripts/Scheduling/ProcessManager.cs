@@ -198,7 +198,7 @@ public class ProcessManager : MonoBehaviour
                     }
 
                     // Move to ready table
-                    process.prefab.transform.SetParent(readyContainer.transform);
+                    process.prefab.transform.SetParent(readyContainer.transform, false);
 
                     // memory.HasMemory(process);
                     memory.AllocateMemory(process);
@@ -214,7 +214,7 @@ public class ProcessManager : MonoBehaviour
                 {
                     jobQueue.Add(process);
                     // Move to ready table
-                    process.prefab.transform.SetParent(jobContainer.transform);
+                    process.prefab.transform.SetParent(jobContainer.transform, false);
                 }
 
 
