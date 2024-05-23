@@ -35,8 +35,8 @@ public class Process : MonoBehaviour
         priority = Random.Range(1,101); // Generate a number from 1 to 100
         burstTime = Random.Range(1,10);
         memorySize = Random.Range(64,128);
-        SetStatus(Status.New);
-        waitTime = Random.Range(0,10);
+        // SetStatus(Status.New);
+        waitTime = 0;
         quantumTime = 4;
     }
 
