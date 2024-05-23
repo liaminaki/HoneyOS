@@ -9,7 +9,6 @@ public class ProcessManager : MonoBehaviour
     private int processCount;
     private List<Process> processes;
     private List<Process> readyQueue;
-    private List<Process> jobQueue;
     private Process runningProcess;
     private Process prevRunningProcess;
     private bool isPlaying;
@@ -20,9 +19,7 @@ public class ProcessManager : MonoBehaviour
     // private Memory memory;
     public Memory memory { get; private set; }
 
-    public GameObject readyContainer;
-    public GameObject jobContainer;
-
+    public GameObject processesContainer;
     public GameObject processPrefab;
 
     public TMP_Text schedPolicyText;
@@ -39,6 +36,7 @@ public class ProcessManager : MonoBehaviour
         prevRunningProcess = null;
         timeText.text = time.ToString();
         // SetSchedulingPolicy(SchedPolicy.FCFS);
+        
 
     }
 
@@ -184,33 +182,15 @@ public class ProcessManager : MonoBehaviour
             // Create new reference to terminated process since cant be done while iterating
             // Works since there is only one or no processes that will terminated at a time
 
-            if (process.status == Status.Ready)
-            {
+            if (process.status == Status.Ready) {
                 
                 if (!readyQueue.Contains(process))
                 {
                     readyQueue.Add(process);
-
-                    process.transform.SetParent(readyContainer.transform);
                     // memory.HasMemory(process);
                     memory.AllocateMemory(process);
                 }
 
-            }
-
-            else if (process.status == Status.Waiting)
-            {
-                if (!jobQueue.Contains(process))
-                {
-                    jobQueue.Add(process);
-
-                    process.transform.SetParent(readyContainer.transform);
-                    // memory.HasMemory(process);
-                    // memory.AllocateMemory(process);
-                }
-                
-                process.transform.SetParent(jobContainer.transform);
-                
             }
 
             else if (process.status == Status.Terminated) {
@@ -263,22 +243,13 @@ public class ProcessManager : MonoBehaviour
         
         // Add the new process to the processes list
 
-
         GameObject newProcess = Object.Instantiate(processPrefab, processesContainer.transform);
-        Process process = newProcess.GetComponent<Process>();
         
-        // if (memory.HasMemory(process))
-        // {
-        //      // Sets "processHolder" as the new parent of the process GameObject.
-        //     newProcess.transform.SetParent(readyContainer.transform); // Set position relative to parent
-           
-        // }
+        // Sets "processHolder" as the new parent of the process GameObject.
+        newProcess.transform.SetParent(processesContainer.transform); // Set position relative to parent
+        // process.transform.SetParent(processHolder.transform, false); // Set position in global orientation
 
-        // else
-        // {
-        //     newProcess.transform.SetParent(jobContainer.transform);
-        // }
-       
+        Process process = newProcess.GetComponent<Process>();
         processes.Add(process);
         process.InitAttributes(newProcess, ++processCount, ++time);
         process.UpdateAttributes();
