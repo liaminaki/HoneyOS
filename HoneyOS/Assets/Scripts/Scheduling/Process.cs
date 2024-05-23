@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Process : MonoBehaviour
 {   
+    public GameObject prefab { get; set; }
     public TMP_Text idText;
     public TMP_Text priorityText;
     public TMP_Text arrivalTimeText;
@@ -35,8 +36,9 @@ public class Process : MonoBehaviour
         priority = Random.Range(1,101); // Generate a number from 1 to 100
         burstTime = Random.Range(1,10);
         memorySize = Random.Range(64,128);
-        SetStatus(Status.New);
-        waitTime = Random.Range(0,10);
+        // SetStatus(Status.New);
+        // waitTime = Random.Range(0,10);
+        waitTime = 0;
         quantumTime = 4;
     }
 

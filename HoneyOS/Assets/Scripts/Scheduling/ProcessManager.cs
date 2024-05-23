@@ -9,6 +9,7 @@ public class ProcessManager : MonoBehaviour
     private int processCount;
     private List<Process> processes;
     private List<Process> readyQueue;
+    private List<Process> jobQueue;
     private Process runningProcess;
     private Process prevRunningProcess;
     private bool isPlaying;
@@ -19,7 +20,8 @@ public class ProcessManager : MonoBehaviour
     // private Memory memory;
     public Memory memory { get; private set; }
 
-    public GameObject processesContainer;
+    public GameObject readyContainer;
+    public GameObject jobContainer;
     public GameObject processPrefab;
 
     public TMP_Text schedPolicyText;
@@ -30,6 +32,7 @@ public class ProcessManager : MonoBehaviour
         processCount = 0;
         processes = new List<Process>();
         readyQueue = new List<Process>();
+        jobQueue = new List<Process>();
         isPlaying = false;
         time = 0;
         memory = Memory.Instance;
@@ -185,11 +188,35 @@ public class ProcessManager : MonoBehaviour
             if (process.status == Status.Ready) {
                 
                 if (!readyQueue.Contains(process))
-                {
+                {   
                     readyQueue.Add(process);
+
+                    if (jobQueue.Contains(process))
+                    {
+                        jobQueue.Remove(process);
+                        
+                    }
+
+                    // Move to ready table
+                    process.prefab.transform.SetParent(readyContainer.transform);
+
                     // memory.HasMemory(process);
                     memory.AllocateMemory(process);
                 }
+
+                
+
+            }
+
+            else if (process.status == Status.Waiting) {
+                
+                if (!jobQueue.Contains(process))
+                {
+                    jobQueue.Add(process);
+                    // Move to ready table
+                    process.prefab.transform.SetParent(jobContainer.transform);
+                }
+
 
             }
 
@@ -242,14 +269,15 @@ public class ProcessManager : MonoBehaviour
         // Process newProcess = new Process(processCount, defaultProcessTime);
         
         // Add the new process to the processes list
-
-        GameObject newProcess = Object.Instantiate(processPrefab, processesContainer.transform);
+        // , processesContainer.transform)
+        GameObject newProcess = Object.Instantiate(processPrefab);
         
         // Sets "processHolder" as the new parent of the process GameObject.
-        newProcess.transform.SetParent(processesContainer.transform); // Set position relative to parent
+        // newProcess.transform.SetParent(processesContainer.transform); // Set position relative to parent
         // process.transform.SetParent(processHolder.transform, false); // Set position in global orientation
 
         Process process = newProcess.GetComponent<Process>();
+        process.prefab = newProcess;
         processes.Add(process);
         process.InitAttributes(newProcess, ++processCount, ++time);
         process.UpdateAttributes();
