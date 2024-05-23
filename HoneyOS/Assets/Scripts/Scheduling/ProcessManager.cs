@@ -199,11 +199,15 @@ public class ProcessManager : MonoBehaviour
                         GameObject newProcess = Object.Instantiate(processPrefab, readyContainer.transform);
 
                     }
+
+                    
                     
                     else 
                     {
                         process.transform.SetParent(readyContainer.transform);
                     }
+
+                    
                     
                     // memory.HasMemory(process);
                     memory.AllocateMemory(process);
