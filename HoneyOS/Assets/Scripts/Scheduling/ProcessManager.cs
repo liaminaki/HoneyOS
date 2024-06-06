@@ -167,6 +167,7 @@ public class ProcessManager : MonoBehaviour
                     prevRunningProcess.SetStatus(Status.Ready);
                 
                 runningProcess.SetStatus(Status.Running);
+                Debug.Log("nirunning");
                 prevRunningProcess = runningProcess;
             }            
             
