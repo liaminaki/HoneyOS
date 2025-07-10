@@ -1,17 +1,34 @@
 # HoneyOS
 
-A voice-command-powered Operating System simulator with Text Editor and Guide to OS app. It is currently in **Phase 1** of 3 of development and is expected to be completed around June 2024.
+**HoneyOS** is a voice-command-powered Operating System simulator featuring an interactive guide to core OS concepts. The project is designed as an educational tool to help students better understand how operating systems work—through simulations of scheduling and memory management algorithms.
 
-## Documentation
-A comprehensive detail on **Phase 1** features can be accessed in [HoneyOS Phase 1 Documentation](https://docs.google.com/document/d/19FZSBX0XuIFEeafenohvKLDd5YpfsWehqJxKpPe4Ax4/edit?usp=sharing).
+HoneyOS has now completed all **three phases** of development as of **June 2024**, offering a full suite of OS-related educational features.
 
-## Future Features
+---
 
-HoneyOS is set to introduce new features within the operating environment in the next phases including:
+## 📄 Documentation
 
-- **Phase 2: OS Scheduling Algorithms Simulator.** It will have simulator for the following policies:
-    - First Come, First Serve Policy
-    - Shortest Job First Policy
-    - Priority Policy
-    - Round Robin Algorithm
-- **Phase 3: Memory Management Simulator**
+- 📘 [Phase 1 Documentation](https://docs.google.com/document/d/19FZSBX0XuIFEeafenohvKLDd5YpfsWehqJxKpPe4Ax4/edit?usp=sharing)
+- 📗 [Combined Phase 2–3 Documentation](https://drive.google.com/file/d/1hIc6C_lWewbl7qqCpuJsJ4aDD-xZtFDr/view?usp=sharing)
+
+---
+
+## ✅ Completed Features
+
+### ✅ **Phase 1: Core Interface**
+- Voice-command support
+- Custom Text Editor
+- OS concept viewer and guide
+
+### ✅ **Phase 2: OS Scheduling Algorithms Simulator**
+Simulates the following CPU scheduling policies:
+- First Come, First Serve (FCFS)
+- Shortest Job First (SJF)
+- Priority Scheduling
+- Round Robin
+
+### ✅ **Phase 3: Memory Management Simulator**
+Interactive simulations of:
+- Visualization of memory blocks and allocation status
+
+---
